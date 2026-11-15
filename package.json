@@ -48,7 +48,7 @@
     "vitest": "catalog:test"
   },
   "simple-git-hooks": {
-    "pre-commit": "nano-staged",
+    "pre-commit": "pnpm exec nano-staged",
     "pre-push": "pnpm run typecheck && pnpm run test"
   },
   "nano-staged": {
