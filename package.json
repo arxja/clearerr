@@ -1,5 +1,5 @@
 {
-  "name": "name_placeholder",
+  "name": "clearerr",
   "type": "module",
   "version": "0.0.0",
   "packageManager": "pnpm@12.18.0",
@@ -45,9 +45,6 @@
     "typescript": "catalog:core",
     "vite": "catalog:build",
     "vitest": "catalog:test"
-  },
-  "simple-git-hooks": {
-    "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && pnpm run ci && pnpx nano-staged"
   },
   "nano-staged": {
     "*.{js,ts,tsx,json,css,md,yaml,vue}": "eslint --fix --no-warn-ignored"
