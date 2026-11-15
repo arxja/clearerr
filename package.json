@@ -21,10 +21,11 @@
     "knip": "knip",
     "lint": "eslint --cache",
     "start": "tsx src/index.ts",
-    "test:b": "vitest",
-    "test": "pnpm run build && vitest",
+    "test": "vitest",
+    "test:pkg": "pnpm run build && vitest",
     "typecheck": "tsc",
-    "ci": "pnpm run lint && pnpm run typecheck && pnpm run knip && pnpm run test"
+    "ci": "pnpm run lint && pnpm run typecheck && pnpm run knip && pnpm run test",
+    "prepare": "simple-git-hooks"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
@@ -45,6 +46,10 @@
     "typescript": "catalog:core",
     "vite": "catalog:build",
     "vitest": "catalog:test"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "nano-staged",
+    "pre-push": "pnpm run typecheck && pnpm run test"
   },
   "nano-staged": {
     "*.{js,ts,tsx,json,css,md,yaml,vue}": "eslint --fix --no-warn-ignored"
