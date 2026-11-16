@@ -51,6 +51,6 @@
     "pre-commit": "pnpm exec nano-staged"
   },
   "nano-staged": {
-    "*.{js,ts,tsx,json,css,md,yaml,vue}": "eslint --fix --no-warn-ignored"
+    "*.{js,ts,tsx,json,css,md,yaml,vue}": "eslint --cache --fix --no-warn-ignored"
   }
 }
