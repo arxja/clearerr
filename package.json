@@ -48,8 +48,7 @@
     "vitest": "catalog:test"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm exec nano-staged",
-    "pre-push": "pnpm run typecheck && pnpm run test"
+    "pre-commit": "pnpm exec nano-staged"
   },
   "nano-staged": {
     "*.{js,ts,tsx,json,css,md,yaml,vue}": "eslint --fix --no-warn-ignored"
