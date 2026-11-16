@@ -24,7 +24,7 @@
     "test": "vitest",
     "test:pkg": "pnpm run build && vitest",
     "typecheck": "tsc",
-    "ci": "pnpm run lint && pnpm run typecheck && pnpm run knip && pnpm run test",
+    "ci": "pnpm run lint && pnpm run typecheck && pnpm run knip && pnpm run test:pkg",
     "prepare": "simple-git-hooks"
   },
   "devDependencies": {
