@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "code": "DB_CONNECTION_REFUSED",
+  "message": "connect ECONNREFUSED 127.0.0.1:5432",
+  "location": {
+    "file": "src/db.ts",
+    "line": 56,
+    "column": 17,
+    "function": "createConnection",
+    "phase": "startup"
+  },
+  "context": {
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "fix": {
+    "hint": "Verify Postgres is running and the DB host/port are correct, then retry.",
+    "retryable": "backoff"
+  },
+  "severity": "recoverable",
+  "timestamp": "2026-11-16T10:02:00.000Z"
+}

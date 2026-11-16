@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "code": "CONFIG_INVALID_PORT",
+  "message": "Invalid port 99999",
+  "location": {
+    "file": "src/config.ts",
+    "line": 42,
+    "column": 13,
+    "function": "validateConfig",
+    "phase": "validate"
+  },
+  "context": {
+    "port": 99999,
+    "expected": "1-65535"
+  },
+  "fix": {
+    "hint": "Set PORT to a value between 1 and 65535.",
+    "retryable": "no"
+  },
+  "severity": "fatal",
+  "timestamp": "2026-11-16T10:00:00.000Z"
+}

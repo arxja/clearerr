@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "code": "DATA_FILE_NOT_FOUND",
+  "message": "ENOENT: no such file or directory, open './data/users.json'",
+  "location": {
+    "file": "src/data.ts",
+    "line": 35,
+    "column": 13,
+    "function": "loadUsers",
+    "phase": "load"
+  },
+  "context": {
+    "path": "./data/users.json",
+    "errno": "ENOENT",
+    "operation": "open"
+  },
+  "fix": {
+    "hint": "Create the file or correct the path before the app starts reading seed data.",
+    "retryable": "no"
+  },
+  "severity": "fatal",
+  "timestamp": "2026-11-16T10:04:00.000Z"
+}

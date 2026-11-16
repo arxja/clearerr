@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "code": "MISSING_REQUIRED_ENV",
+  "message": "Missing required env var: DATABASE_URL",
+  "location": {
+    "file": "src/config.ts",
+    "line": 79,
+    "column": 21,
+    "function": "loadConfig",
+    "phase": "bootstrap"
+  },
+  "context": {
+    "key": "DATABASE_URL",
+    "required": true,
+    "source": "process.env"
+  },
+  "fix": {
+    "hint": "Add DATABASE_URL to the runtime environment before starting the app.",
+    "retryable": "no"
+  },
+  "severity": "fatal",
+  "timestamp": "2026-11-16T10:01:00.000Z"
+}

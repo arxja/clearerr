@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "code": "RATE_LIMIT_EXCEEDED",
+  "message": "429 Too Many Requests",
+  "location": {
+    "file": "src/analytics.ts",
+    "line": 98,
+    "column": 27,
+    "function": "fetchSummary",
+    "phase": "poll"
+  },
+  "context": {
+    "status": 429,
+    "retryAfterSeconds": 60,
+    "endpoint": "/api/summary"
+  },
+  "fix": {
+    "hint": "Back off before retrying, and avoid hammering the upstream API.",
+    "retryable": "backoff"
+  },
+  "severity": "warning",
+  "timestamp": "2026-11-16T10:03:00.000Z"
+}

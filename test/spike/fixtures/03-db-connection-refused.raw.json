@@ -1,0 +1,5 @@
+{
+  "name": "Error",
+  "message": "connect ECONNREFUSED 127.0.0.1:5432",
+  "stack": "Error: connect ECONNREFUSED 127.0.0.1:5432\n    at createConnection (src/db.ts:56:17)\n    at boot (src/startup.ts:24:9)"
+}

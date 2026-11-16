@@ -1,0 +1,29 @@
+{
+  "cases": [
+    {
+      "id": "01-config-invalid-port",
+      "raw": "01-config-invalid-port.raw.json",
+      "envelope": "01-config-invalid-port.envelope.json"
+    },
+    {
+      "id": "02-missing-env-var",
+      "raw": "02-missing-env-var.raw.json",
+      "envelope": "02-missing-env-var.envelope.json"
+    },
+    {
+      "id": "03-db-connection-refused",
+      "raw": "03-db-connection-refused.raw.json",
+      "envelope": "03-db-connection-refused.envelope.json"
+    },
+    {
+      "id": "04-rate-limit-exceeded",
+      "raw": "04-rate-limit-exceeded.raw.json",
+      "envelope": "04-rate-limit-exceeded.envelope.json"
+    },
+    {
+      "id": "05-file-read-failed",
+      "raw": "05-file-read-failed.raw.json",
+      "envelope": "05-file-read-failed.envelope.json"
+    }
+  ]
+}

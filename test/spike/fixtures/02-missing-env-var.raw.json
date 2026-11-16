@@ -1,0 +1,5 @@
+{
+  "name": "Error",
+  "message": "Missing required env var: DATABASE_URL",
+  "stack": "Error: Missing required env var: DATABASE_URL\n    at loadConfig (src/config.ts:79:21)\n    at bootstrap (src/index.ts:11:5)"
+}
