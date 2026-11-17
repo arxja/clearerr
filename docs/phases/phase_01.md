@@ -4,15 +4,15 @@ Goal: Envelope + formatter shipped and tested.
 Gate: Flow B passes.
 
 ## T1.1 — Scaffold: TS, tsup, Vitest, ESLint, Prettier, Changesets, GH Actions
-Status: todo
+Status: canceled
 Acceptance: pnpm test, pnpm run build green
 
 ## T1.2 — ClearerrError per §2, code format validation
-Status: todo
+Status: done
 Acceptance: Constructor / defaults / immutability tests
 
 ## T1.3 — err() factory
-Status: todo
+Status: done
 Acceptance: Returns ClearerrError with same shape
 
 ## T1.4 — toJSON() with cause chain (depth ≤10, cycle detection)

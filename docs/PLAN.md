@@ -2,9 +2,10 @@
 
 Dev-time plan. At release, replace with user-facing docs.
 
-Status: Phase 0 — Spike (done)
+Status: Phase 1 — Runtime core (in progress)
 Envelope spec: docs/envelope.md
-Phase archive: phases/phase_*.md
+Phase archive: docs/phases/phase_00.md
+Current phase: docs/phases/phase_01.md
 
 ## Scope (v1)
 
@@ -28,12 +29,4 @@ B — Runtime emission: call installAgentHandler() once at top level → uncaugh
 C — Agent consumption: parse stderr JSON → read code, location, context, fix.hint, fix.retryable → act on retryable → no source re-read.
 D — Enforcement (CI): npx clearerr scan --ci → exit 1 on error severity or coverage < threshold → PR blocked.
 
-| ID | Task | Status |
-|---|---|---|
-| T0.1 | Write docs/envelope.md from §2 — Acceptance: Spec file committed | done |
-| T0.2 | Minimal ClearerrError + formatForAgent — Acceptance: Unit test: emits valid JSON | done |
-| T0.3 | 5 real failures, paired variants — Acceptance: test/spike/fixtures/* | done |
-| T0.4 | Harness: mid-tier model, temp 0, 5 runs/variant — Acceptance: test/spike/RESULTS.md | done |
-| T0.5 | One-page result + fill §6.1 — Acceptance: Gate filled | done |
-
-When this phase closes: move this table verbatim to phases/phase-0.md, clear this slot, mark the roadmap row done.
+Phase 0 is archived in docs/phases/phase_00.md. The active runtime work continues in docs/phases/phase_01.md.

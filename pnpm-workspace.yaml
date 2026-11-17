@@ -9,7 +9,7 @@ shellEmulator: true
 
 allowBuilds:
   esbuild: true
-  simple-git-hooks: true
+  simple-git-hooks: false
 
 catalogs:
   api:
