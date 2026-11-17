@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { ClearerrError, err, formatForAgent } from '../src/error'
+import { ClearerrError, err, formatForAgent } from '../src/runtime/error'
+import { isValidErrorCode } from '../src/shared/registry'
 
 describe('clearerrError', () => {
-  it('emits valid JSON for agent formatting', () => {
+  it('validates code format and emits valid JSON for agent formatting', () => {
+    expect(isValidErrorCode('CONFIG_INVALID_PORT')).toBe(true)
+    expect(isValidErrorCode('config_invalid_port')).toBe(false)
+
     const error = err(
       {
         code: 'CONFIG_INVALID_PORT',
