@@ -2,7 +2,7 @@
 
 Dev-time plan. At release, replace with user-facing docs.
 
-Status: Phase 0 — Spike (active)
+Status: Phase 0 — Spike (done)
 Envelope spec: docs/envelope.md
 Phase archive: phases/phase_*.md
 
@@ -30,10 +30,10 @@ D — Enforcement (CI): npx clearerr scan --ci → exit 1 on error severity or c
 
 | ID | Task | Status |
 |---|---|---|
-| T0.1 | Write docs/envelope.md from §2 — Acceptance: Spec file committed | todo |
-| T0.2 | Minimal ClearerrError + formatForAgent — Acceptance: Unit test: emits valid JSON | todo |
-| T0.3 | 5 real failures, paired variants — Acceptance: test/spike/fixtures/* | todo |
-| T0.4 | Harness: mid-tier model, temp 0, 5 runs/variant — Acceptance: test/spike/RESULTS.md | todo |
-| T0.5 | One-page result + fill §6.1 — Acceptance: Gate filled | todo |
+| T0.1 | Write docs/envelope.md from §2 — Acceptance: Spec file committed | done |
+| T0.2 | Minimal ClearerrError + formatForAgent — Acceptance: Unit test: emits valid JSON | done |
+| T0.3 | 5 real failures, paired variants — Acceptance: test/spike/fixtures/* | done |
+| T0.4 | Harness: mid-tier model, temp 0, 5 runs/variant — Acceptance: test/spike/RESULTS.md | done |
+| T0.5 | One-page result + fill §6.1 — Acceptance: Gate filled | done |
 
 When this phase closes: move this table verbatim to phases/phase-0.md, clear this slot, mark the roadmap row done.
