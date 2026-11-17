@@ -23,6 +23,7 @@
     "start": "tsx src/index.ts",
     "test": "vitest",
     "test:pkg": "pnpm run build && vitest",
+    "test:run": "vitest run",
     "typecheck": "tsc",
     "ci": "pnpm run lint && pnpm run typecheck && pnpm run knip && pnpm run test:pkg",
     "prepare": "simple-git-hooks"
@@ -51,6 +52,6 @@
     "pre-commit": "pnpm exec nano-staged"
   },
   "nano-staged": {
-    "*.{js,ts,tsx,json,css,md,yaml,vue}": "eslint --fix --no-warn-ignored"
+    "*.{js,ts,tsx,json,css,md,yaml,vue}": "eslint --cache --fix --no-warn-ignored"
   }
 }

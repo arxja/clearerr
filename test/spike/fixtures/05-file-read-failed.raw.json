@@ -1,0 +1,5 @@
+{
+  "name": "Error",
+  "message": "ENOENT: no such file or directory, open './data/users.json'",
+  "stack": "Error: ENOENT: no such file or directory, open './data/users.json'\n    at readFileSync (node:fs:144:10)\n    at loadUsers (src/data.ts:35:13)"
+}

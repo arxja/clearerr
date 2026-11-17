@@ -1,0 +1,5 @@
+{
+  "name": "Error",
+  "message": "429 Too Many Requests",
+  "stack": "Error: 429 Too Many Requests\n    at fetchSummary (src/analytics.ts:98:27)\n    at renderDashboard (src/app.ts:55:11)"
+}

@@ -1,0 +1,5 @@
+{
+  "name": "Error",
+  "message": "Invalid port 99999",
+  "stack": "Error: Invalid port 99999\n    at validateConfig (src/config.ts:42:13)\n    at startServer (src/server.ts:18:5)"
+}
