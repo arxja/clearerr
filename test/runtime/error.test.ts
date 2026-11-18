@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { ClearerrError, err, formatForAgent } from '../src/runtime/error'
-import { isValidErrorCode } from '../src/shared/registry'
+import { ClearerrError, err, formatForAgent } from '../../src/runtime/error'
+import { isValidErrorCode } from '../../src/shared/registry'
 
 describe('clearerrError', () => {
   it('validates code format and emits valid JSON for agent formatting', () => {
