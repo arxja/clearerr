@@ -12,3 +12,9 @@ The largest gains appeared in the cases where the raw stack trace hid the action
 Decision: continue with an envelope-first runtime and agent contract. Clearerr should emit structured `ClearerrError` payloads with code, message, location, context, fix, severity, and cause metadata; agents should consume that payload before consulting source files.
 
 This gate is complete and the spike supports proceeding into the runtime implementation phase.
+
+- 2026-11-18 — Envelope is server/agent-only in v1. Browser runtime and
+  user-facing error rendering are out of scope. `formatForHuman` is
+  developer-facing, not user-facing. User-visible output is the application's
+  responsibility, driven by `code` + app-controlled `message`. Redaction is a
+  backstop, not a policy. (security model — docs/envelope.md)
