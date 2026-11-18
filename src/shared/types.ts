@@ -32,6 +32,7 @@ export interface SerializedError {
   name: string
   message: string
   stack?: string
+  cause?: ClearerrErrorJSON | SerializedError
 }
 
 export interface ClearerrErrorSpec {
