@@ -1,5 +1,6 @@
+import type { ClearerrError } from '../../src/runtime/error'
 import { describe, expect, it } from 'vitest'
-import { ClearerrError, err } from '../../src/runtime/error'
+import { err } from '../../src/runtime/error'
 
 describe('cause-chain serialization', () => {
   it('serializes nested ClearerrError causes', () => {

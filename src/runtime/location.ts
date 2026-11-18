@@ -10,7 +10,7 @@ const OWN_RUNTIME_FRAMES = [
 ]
 
 export function captureLocation(stack?: string): ErrorLocation {
-  const lines = (stack ?? new Error().stack ?? '').split('\n').slice(1)
+  const lines = (stack ?? new Error('Location capture requires a stack').stack ?? '').split('\n').slice(1)
 
   for (const line of lines) {
     const frame = parseStackFrame(line)
@@ -31,21 +31,37 @@ interface ParsedFrame extends ErrorLocation {
 
 function parseStackFrame(line: string): ParsedFrame | undefined {
   const trimmed = line.trim()
-  const match = trimmed.match(/^at\s+(?:(.+?)\s+\()?([^()]+):(\d+):(\d+)\)?$/)
-
-  if (!match) {
+  if (!trimmed.startsWith('at ')) {
     return undefined
   }
 
-  let file = normalizeFile(match[2])
-  const lineNumber = Number(match[3])
-  const column = Number(match[4])
+  let locationText = trimmed.slice(3).trim()
+  if (locationText.endsWith(')')) {
+    locationText = locationText.slice(0, -1)
+  }
+
+  const suffixMatch = locationText.match(/:(\d+):(\d+)$/u)
+  if (!suffixMatch) {
+    return undefined
+  }
+
+  const column = Number(suffixMatch[2])
+  const lineNumber = Number(suffixMatch[1])
+  let prefix = locationText.slice(0, suffixMatch.index)
+  let functionName: string | undefined
+
+  const openParenthesis = prefix.lastIndexOf(' (')
+  if (openParenthesis >= 0) {
+    functionName = prefix.slice(0, openParenthesis).trim()
+    prefix = prefix.slice(openParenthesis + 2).trim()
+  }
+
+  const file = normalizeFile(prefix)
 
   if (!file || !Number.isInteger(lineNumber) || !Number.isInteger(column)) {
     return undefined
   }
 
-  const functionName = match[1]?.trim()
   const frame: ParsedFrame = { file, line: lineNumber, column }
 
   if (functionName && functionName !== 'new <anonymous>') {
@@ -56,23 +72,24 @@ function parseStackFrame(line: string): ParsedFrame | undefined {
 }
 
 function normalizeFile(file: string): string {
-  if (file.startsWith('file://')) {
-    file = file.slice('file://'.length)
-    if (file.startsWith('localhost/')) {
-      file = file.slice('localhost/'.length)
+  let normalized = file
+  if (normalized.startsWith('file://')) {
+    normalized = normalized.slice('file://'.length)
+    if (normalized.startsWith('localhost/')) {
+      normalized = normalized.slice('localhost/'.length)
     }
     try {
-      file = decodeURIComponent(file)
+      normalized = decodeURIComponent(normalized)
     }
     catch {
       // Keep the original value if it is not valid percent encoding.
     }
-    if (/^\/[A-Z]:\//u.test(file)) {
-      file = file.slice(1)
+    if (/^\/[A-Z]:\//u.test(normalized)) {
+      normalized = normalized.slice(1)
     }
   }
 
-  return file.trim().replace(/\\/gu, '/')
+  return normalized.trim().replace(/\\/gu, '/')
 }
 
 function isIgnoredFrame(file: string): boolean {
@@ -90,8 +107,8 @@ function isIgnoredFrame(file: string): boolean {
     }
   }
 
-  if (/\/(src|dist)\/runtime\/location\.[cm]?[jt]s$/u.test(normalized)
-    || /\/(src|dist)\/runtime\/error\.[cm]?[jt]s$/u.test(normalized)
+  if (/\/(?:src|dist)\/runtime\/location\.[cm]?[jt]s$/u.test(normalized)
+    || /\/(?:src|dist)\/runtime\/error\.[cm]?[jt]s$/u.test(normalized)
     || /\/clearerr\/dist\/.*\.mjs$/u.test(lower)
     || /\\clearerr\\dist\\.*\.mjs$/u.test(lower)) {
     return true

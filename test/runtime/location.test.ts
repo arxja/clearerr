@@ -35,7 +35,12 @@ describe('location capture', () => {
     const error = err({
       code: 'TEST_EXPLICIT_LOCATION',
       message: 'explicit',
-      location: { file: 'src/manual.ts', line: 42, column: 8, function: 'manual' },
+      location: {
+        file: 'src/manual.ts',
+        line: 42,
+        column: 8,
+        function: 'manual',
+      },
     })
 
     expect(error.location).toEqual({
