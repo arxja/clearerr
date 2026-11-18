@@ -5,12 +5,19 @@ const OWN_RUNTIME_FRAMES = [
   '\\src\\runtime\\error.',
   '/src/runtime/location.',
   '\\src\\runtime\\location.',
-  '/dist/index.',
-  '\\dist\\index.',
 ]
 
-export function captureLocation(stack?: string): ErrorLocation {
-  const lines = (stack ?? new Error('Location capture requires a stack').stack ?? '').split('\n').slice(1)
+export function captureLocation(stack?: unknown): ErrorLocation {
+  let candidate: unknown = stack
+  if (stack === undefined) {
+    candidate = new Error('Location capture requires a stack').stack
+  }
+
+  if (typeof candidate !== 'string') {
+    return { file: 'unknown', line: 0 }
+  }
+
+  const lines = candidate.split('\n').slice(1)
 
   for (const line of lines) {
     const frame = parseStackFrame(line)
@@ -36,8 +43,10 @@ function parseStackFrame(line: string): ParsedFrame | undefined {
   }
 
   let locationText = trimmed.slice(3).trim()
+  let wrapped = false
   if (locationText.endsWith(')')) {
     locationText = locationText.slice(0, -1)
+    wrapped = true
   }
 
   const suffixMatch = locationText.match(/:(\d+):(\d+)$/u)
@@ -50,10 +59,12 @@ function parseStackFrame(line: string): ParsedFrame | undefined {
   let prefix = locationText.slice(0, suffixMatch.index)
   let functionName: string | undefined
 
-  const openParenthesis = prefix.lastIndexOf(' (')
-  if (openParenthesis >= 0) {
-    functionName = prefix.slice(0, openParenthesis).trim()
-    prefix = prefix.slice(openParenthesis + 2).trim()
+  if (wrapped) {
+    const outerWrapper = findOuterFrameWrapper(prefix)
+    if (outerWrapper !== undefined) {
+      functionName = prefix.slice(0, outerWrapper).trim()
+      prefix = prefix.slice(outerWrapper + 1).trim()
+    }
   }
 
   const file = normalizeFile(prefix)
@@ -71,12 +82,34 @@ function parseStackFrame(line: string): ParsedFrame | undefined {
   return frame
 }
 
+function findOuterFrameWrapper(prefix: string): number | undefined {
+  let depth = 0
+
+  for (let index = 0; index < prefix.length; index++) {
+    const character = prefix[index]
+    if (character === '(') {
+      if (depth === 0) {
+        const before = prefix[index - 1]
+        if (index === 0 || before === ' ' || before === '\t') {
+          return index
+        }
+      }
+      depth++
+    }
+    else if (character === ')' && depth > 0) {
+      depth--
+    }
+  }
+
+  return undefined
+}
+
 function normalizeFile(file: string): string {
   let normalized = file
   if (normalized.startsWith('file://')) {
     normalized = normalized.slice('file://'.length)
     if (normalized.startsWith('localhost/')) {
-      normalized = normalized.slice('localhost/'.length)
+      normalized = `/${normalized.slice('localhost/'.length)}`
     }
     try {
       normalized = decodeURIComponent(normalized)
@@ -96,22 +129,27 @@ function isIgnoredFrame(file: string): boolean {
   const normalized = file.replace(/\\/gu, '/')
   const lower = normalized.toLowerCase()
 
-  if (lower.includes('node_modules/') || lower.startsWith('node:')) {
+  if (/(?:^|\/|\\)node_modules(?:\/|\\|$)/u.test(lower) || lower.startsWith('node:')) {
     return true
   }
 
-  for (const marker of OWN_RUNTIME_FRAMES) {
-    const normalizedMarker = marker.replace(/\\/gu, '/')
-    if (normalized.includes(normalizedMarker)) {
+  const isClearerrPackage = lower.includes('/clearerr/')
+    || lower.includes('\\clearerr\\')
+    || lower.startsWith('clearerr/')
+
+  if (isClearerrPackage) {
+    for (const marker of OWN_RUNTIME_FRAMES) {
+      const normalizedMarker = marker.replace(/\\/gu, '/')
+      if (normalized.includes(normalizedMarker)) {
+        return true
+      }
+    }
+
+    if (/\/clearerr\/dist\/index\.[^/]+$/u.test(lower)
+      || /\\clearerr\\dist\\index\.[^\\]+$/u.test(lower)
+      || /\/clearerr\/src\/runtime\/(?:error|location)\.[cm]?[jt]s$/u.test(lower)) {
       return true
     }
-  }
-
-  if (/\/(?:src|dist)\/runtime\/location\.[cm]?[jt]s$/u.test(normalized)
-    || /\/(?:src|dist)\/runtime\/error\.[cm]?[jt]s$/u.test(normalized)
-    || /\/clearerr\/dist\/.*\.mjs$/u.test(lower)
-    || /\\clearerr\\dist\\.*\.mjs$/u.test(lower)) {
-    return true
   }
 
   return false
