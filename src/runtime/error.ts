@@ -42,17 +42,20 @@ export class ClearerrError extends Error {
       line: spec.location?.line ?? capturedLocation.line,
     }
 
+    const capturedFrameMatches = capturedLocation.file === this.location.file
+      && capturedLocation.line === this.location.line
+
     if (spec.location?.column !== undefined) {
       this.location.column = spec.location.column
     }
-    else if (capturedLocation.column !== undefined) {
+    else if (capturedFrameMatches && capturedLocation.column !== undefined) {
       this.location.column = capturedLocation.column
     }
 
     if (spec.location?.function !== undefined) {
       this.location.function = spec.location.function
     }
-    else if (capturedLocation.function !== undefined) {
+    else if (capturedFrameMatches && capturedLocation.function !== undefined) {
       this.location.function = capturedLocation.function
     }
 
