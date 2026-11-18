@@ -15,7 +15,7 @@ interface SerializableClearerrError extends ClearerrErrorSpec {
   readonly timestamp: string
   readonly traceId?: string
   readonly message: string
-  readonly cause?: Error | SerializableClearerrError
+  readonly cause?: unknown
 }
 
 export function serializeClearerrError(error: SerializableClearerrError): ClearerrErrorJSON {
@@ -59,7 +59,7 @@ function serializeCause(
   seen: WeakSet<object> = new WeakSet<object>(),
   depth = 0,
 ): ClearerrErrorJSON | SerializedError {
-  if (depth >= MAX_CAUSE_DEPTH) {
+  if (depth > MAX_CAUSE_DEPTH) {
     return truncatedCause()
   }
 
@@ -86,7 +86,7 @@ function serializeCause(
   }
 
   if (value instanceof Error) {
-    const serialized = serializeNativeError(value)
+    const serialized = serializeNativeError(value, seen, depth)
     seen.delete(value)
     return serialized
   }
@@ -102,7 +102,11 @@ function truncatedCause(): SerializedError {
   }
 }
 
-function serializeNativeError(value: Error): SerializedError {
+function serializeNativeError(
+  value: Error,
+  seen: WeakSet<object>,
+  depth: number,
+): SerializedError {
   const serialized: SerializedError = {
     name: value.name,
     message: value.message,
@@ -110,6 +114,11 @@ function serializeNativeError(value: Error): SerializedError {
 
   if (value.stack) {
     serialized.stack = value.stack
+  }
+
+  const cause = (value as Error & { cause?: unknown }).cause
+  if (cause !== undefined) {
+    serialized.cause = serializeCause(cause, seen, depth + 1)
   }
 
   return serialized
@@ -151,11 +160,22 @@ function isClearerrError(value: object): value is SerializableClearerrError {
     return false
   }
 
-  return value.name === 'ClearerrError'
+  const hasClearerrShape = value.name === 'ClearerrError'
     && typeof value.code === 'string'
     && typeof value.message === 'string'
     && typeof value.timestamp === 'string'
     && typeof value.location === 'object'
     && typeof value.context === 'object'
     && typeof value.severity === 'string'
+
+  if (!hasClearerrShape) {
+    return false
+  }
+
+  const toJSON = (value as { toJSON?: unknown }).toJSON
+  if (typeof toJSON === 'function') {
+    return true
+  }
+
+  return !(value instanceof Error)
 }
