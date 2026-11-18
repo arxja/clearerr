@@ -9,6 +9,8 @@ import type {
   Severity,
 } from '../shared/types'
 import { validateErrorCode } from '../shared/registry'
+import { captureLocation } from './location'
+import { serializeClearerrError } from './serialize'
 
 export class ClearerrError extends Error {
   readonly code: string
@@ -34,12 +36,27 @@ export class ClearerrError extends Error {
       line: spec.location?.line ?? 0,
     }
 
+    const capturedLocation = captureLocation(this.stack)
+    this.location = {
+      file: spec.location?.file ?? capturedLocation.file,
+      line: spec.location?.line ?? capturedLocation.line,
+    }
+
+    const capturedFrameMatches = capturedLocation.file === this.location.file
+      && capturedLocation.line === this.location.line
+
     if (spec.location?.column !== undefined) {
       this.location.column = spec.location.column
+    }
+    else if (capturedFrameMatches && capturedLocation.column !== undefined) {
+      this.location.column = capturedLocation.column
     }
 
     if (spec.location?.function !== undefined) {
       this.location.function = spec.location.function
+    }
+    else if (capturedFrameMatches && capturedLocation.function !== undefined) {
+      this.location.function = capturedLocation.function
     }
 
     if (spec.location?.phase !== undefined) {
@@ -66,29 +83,7 @@ export class ClearerrError extends Error {
   }
 
   toJSON(): ClearerrErrorJSON {
-    const json: ClearerrErrorJSON = {
-      schemaVersion: 1,
-      code: this.code,
-      message: this.message,
-      location: { ...this.location },
-      context: { ...this.context },
-      severity: this.severity,
-      timestamp: this.timestamp,
-    }
-
-    if (this.cause) {
-      json.cause = serializeCause(this.cause)
-    }
-
-    if (this.fix) {
-      json.fix = { ...this.fix }
-    }
-
-    if (this.traceId) {
-      json.traceId = this.traceId
-    }
-
-    return json
+    return serializeClearerrError(this)
   }
 }
 
@@ -125,34 +120,6 @@ export function installAgentHandler(_opts?: {
   format?: 'agent' | 'json' | 'human'
 }): void {
   // Minimal no-op implementation for T0.2.
-}
-
-function serializeCause(value: unknown): ClearerrErrorJSON | SerializedError {
-  if (value instanceof ClearerrError) {
-    return value.toJSON()
-  }
-
-  if (value instanceof Error) {
-    const serialized: SerializedError = {
-      name: value.name,
-      message: value.message,
-    }
-
-    if (value.stack) {
-      serialized.stack = value.stack
-    }
-
-    return serialized
-  }
-
-  if (typeof value === 'object' && value !== null) {
-    return Object.fromEntries(Object.entries(value)) as SerializedError
-  }
-
-  return {
-    name: 'Error',
-    message: String(value),
-  }
 }
 
 function normalizeForAgent(value: unknown, depth: number, seen: WeakSet<object>): unknown {

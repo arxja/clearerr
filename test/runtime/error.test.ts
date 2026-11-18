@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { ClearerrError, err, formatForAgent } from '../src/runtime/error'
-import { isValidErrorCode } from '../src/shared/registry'
+import { ClearerrError, err, formatForAgent } from '../../src/runtime/error'
+import { isValidErrorCode } from '../../src/shared/registry'
 
 describe('clearerrError', () => {
   it('validates code format and emits valid JSON for agent formatting', () => {
@@ -46,5 +46,29 @@ describe('clearerrError', () => {
       code: 'CONFIG_INVALID_PORT',
       message: 'Invalid port 99999',
     })
+  })
+
+  it('does not combine mismatched captured metadata with supplied coordinates', () => {
+    const error = err({
+      code: 'TEST_LOCATION_MATCH',
+      message: 'location match',
+      location: { file: 'src/manual.ts', line: 42 },
+    })
+
+    expect(error.location.file).toBe('src/manual.ts')
+    expect(error.location.line).toBe(42)
+    expect(error.location).not.toHaveProperty('column')
+    expect(error.location).not.toHaveProperty('function')
+  })
+
+  it('preserves caller-supplied column and function', () => {
+    const error = err({
+      code: 'TEST_LOCATION_FIELDS',
+      message: 'location fields',
+      location: { column: 8, function: 'manual' },
+    })
+
+    expect(error.location.column).toBe(8)
+    expect(error.location.function).toBe('manual')
   })
 })

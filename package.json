@@ -22,7 +22,7 @@
     "lint": "eslint --cache",
     "start": "tsx src/index.ts",
     "test": "vitest",
-    "test:pkg": "pnpm run build && vitest",
+    "test:pkg": "pnpm run build && vitest run",
     "test:run": "vitest run",
     "typecheck": "tsc",
     "ci": "pnpm run lint && pnpm run typecheck && pnpm run knip && pnpm run test:pkg"

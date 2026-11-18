@@ -16,11 +16,11 @@ Status: done
 Acceptance: Returns ClearerrError with same shape
 
 ## T1.4 — toJSON() with cause chain (depth ≤10, cycle detection)
-Status: todo
+Status: done
 Acceptance: Nested + cycle tests
 
 ## T1.5 — Location auto-capture (skip own frames + node_modules)
-Status: todo
+Status: done
 Acceptance: Real throw: file/line correct
 
 ## T1.6 — Context redaction (env + config)
