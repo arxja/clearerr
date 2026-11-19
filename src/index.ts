@@ -1,4 +1,5 @@
 export * from './runtime/error'
+export * from './runtime/format'
 export * from './runtime/location'
 export * from './runtime/redact'
 export * from './shared/config'
