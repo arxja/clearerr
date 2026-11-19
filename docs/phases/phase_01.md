@@ -24,7 +24,7 @@ Status: done
 Acceptance: Real throw: file/line correct
 
 ## T1.6 — Context redaction (env + config)
-Status: todo
+Status: done
 Acceptance: Redacted keys → "[redacted]"
 
 ## T1.7 — formatForAgent with maxBytes truncation

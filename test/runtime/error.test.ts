@@ -1,4 +1,8 @@
-import { describe, expect, it } from 'vitest'
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import process from 'node:process'
+import { describe, expect, it, vi } from 'vitest'
 import { ClearerrError, err, formatForAgent } from '../../src/runtime/error'
 import { isValidErrorCode } from '../../src/shared/registry'
 
@@ -70,5 +74,46 @@ describe('clearerrError', () => {
 
     expect(error.location.column).toBe(8)
     expect(error.location.function).toBe('manual')
+  })
+
+  it('constructs safely when .clearerrrc.json is invalid', () => {
+    const tempDir = mkdtempSync(join(tmpdir(), 'clearerr-'))
+    writeFileSync(join(tempDir, '.clearerrrc.json'), '{ invalid json')
+
+    try {
+      vi.spyOn(process, 'cwd').mockReturnValue(tempDir)
+      const cause = new Error('root cause')
+      const error = err(
+        {
+          code: 'TEST_INVALID_CONFIG',
+          message: 'invalid config',
+          context: {
+            password: 'secret',
+            nested: { token: 'secret-two' },
+          },
+          location: { file: 'src/manual.ts', line: 42, column: 8 },
+          fix: { hint: 'Fix the config', retryable: 'once' },
+          severity: 'recoverable',
+        },
+        { cause },
+      )
+
+      expect(error.code).toBe('TEST_INVALID_CONFIG')
+      expect(error.message).toBe('invalid config')
+      expect(error.cause).toBe(cause)
+      expect(error.location).toMatchObject({ file: 'src/manual.ts', line: 42, column: 8 })
+      expect(error.severity).toBe('recoverable')
+      expect(error.fix).toEqual({ hint: 'Fix the config', retryable: 'once' })
+      expect(error.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T/)
+      expect(error.context).toEqual({
+        password: '[redacted]',
+        nested: { token: '[redacted]' },
+      })
+      expect(JSON.stringify(error.context)).not.toContain('secret')
+    }
+    finally {
+      vi.restoreAllMocks()
+      rmSync(tempDir, { recursive: true, force: true })
+    }
   })
 })

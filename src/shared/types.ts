@@ -53,3 +53,7 @@ export interface FormatForAgentOptions {
 export interface ErrorFactoryOptions {
   cause?: unknown
 }
+
+export interface ClearerrConfig {
+  redact: string[]
+}

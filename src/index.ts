@@ -1,4 +1,6 @@
 export * from './runtime/error'
 export * from './runtime/location'
+export * from './runtime/redact'
+export * from './shared/config'
 export * from './shared/registry'
 export * from './shared/types'
