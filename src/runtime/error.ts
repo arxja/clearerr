@@ -10,7 +10,7 @@ import type {
 } from '../shared/types'
 import { validateErrorCode } from '../shared/registry'
 import { captureLocation } from './location'
-import { redactContext } from './redact'
+import { redactContext, redactContextSafely } from './redact'
 import { serializeClearerrError } from './serialize'
 
 export class ClearerrError extends Error {
@@ -29,7 +29,12 @@ export class ClearerrError extends Error {
 
     this.name = 'ClearerrError'
     this.code = spec.code
-    this.context = redactContext(spec.context ?? {})
+    try {
+      this.context = redactContext(spec.context ?? {})
+    }
+    catch {
+      this.context = redactContextSafely(spec.context ?? {})
+    }
     this.fix = spec.fix
     this.severity = spec.severity ?? 'fatal'
     this.location = {
