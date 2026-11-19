@@ -49,6 +49,34 @@ describe('context redaction', () => {
     })
   })
 
+  it('preserves Date instances after redaction', () => {
+    const date = new Date('2026-11-19T12:34:56.000Z')
+
+    const context = redactContext({ date }, ['password'])
+
+    expect(context.date).toBeInstanceOf(Date)
+    expect(context.date.toISOString()).toBe('2026-11-19T12:34:56.000Z')
+  })
+
+  it('preserves shared references with sanitized replacements', () => {
+    const shared = { password: 'secret', safe: true }
+    const context = redactContext({ first: shared, second: shared }, ['password'])
+
+    expect(context.first).toBe(context.second)
+    expect(context.first).toEqual({ password: '[redacted]', safe: true })
+  })
+
+  it('preserves cycles with sanitized replacements', () => {
+    const cyclic: Record<string, unknown> = { password: 'secret' }
+    cyclic.self = cyclic
+
+    const context = redactContext({ cyclic }, ['password'])
+    const sanitized = context.cyclic as Record<string, unknown>
+
+    expect(sanitized.password).toBe('[redacted]')
+    expect(sanitized.self).toBe(sanitized)
+  })
+
   it('loads exact redact keys from a config object', () => {
     const context = redactContext({
       password: 'secret',
