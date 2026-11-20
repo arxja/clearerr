@@ -104,7 +104,6 @@ describe('formatForHuman', () => {
     expect(human).toContain('Cause:')
     expect(human).toContain('"name": "Error"')
     expect(human).toContain('Stack:')
-
   })
 
   it('includes every envelope field when present', () => {
