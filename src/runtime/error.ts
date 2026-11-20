@@ -7,7 +7,6 @@ import type {
   Severity,
 } from '../shared/types'
 import { validateErrorCode } from '../shared/registry'
-import { formatForAgent } from './format'
 import { captureLocation } from './location'
 import { redactContext, redactContextSafely } from './redact'
 import { serializeClearerrError } from './serialize'
