@@ -4,8 +4,6 @@ import type {
   ErrorFactoryOptions,
   ErrorFix,
   ErrorLocation,
-  FormatForAgentOptions,
-  SerializedError,
   Severity,
 } from '../shared/types'
 import { validateErrorCode } from '../shared/registry'
@@ -97,22 +95,6 @@ export function err(spec: ClearerrErrorSpec, opts?: ErrorFactoryOptions): Cleare
   return new ClearerrError(spec, opts)
 }
 
-export function formatForAgent(e: unknown, opts?: FormatForAgentOptions): string {
-  const maxBytes = opts?.maxBytes ?? 8192
-  const value = normalizeForAgent(e, opts?.maxDepth ?? 5, new WeakSet<object>())
-  const json = JSON.stringify(value)
-
-  if (json === undefined) {
-    return 'null'
-  }
-
-  if (json.length <= maxBytes) {
-    return json
-  }
-
-  return `${json.slice(0, Math.max(0, maxBytes - 3))}...`
-}
-
 export function formatForHuman(e: unknown): string {
   if (e instanceof Error) {
     return `${e.name}: ${e.message}`
@@ -126,62 +108,4 @@ export function installAgentHandler(_opts?: {
   format?: 'agent' | 'json' | 'human'
 }): void {
   // Minimal no-op implementation for T0.2.
-}
-
-function normalizeForAgent(value: unknown, depth: number, seen: WeakSet<object>): unknown {
-  if (depth <= 0) {
-    return '[truncated]'
-  }
-
-  if (
-    value === null
-    || value === undefined
-    || typeof value === 'string'
-    || typeof value === 'number'
-    || typeof value === 'boolean'
-  ) {
-    return value
-  }
-
-  if (typeof value === 'bigint') {
-    return value.toString()
-  }
-
-  if (value instanceof Error) {
-    if (value instanceof ClearerrError) {
-      return value.toJSON()
-    }
-
-    const serialized: SerializedError = {
-      name: value.name,
-      message: value.message,
-    }
-
-    if (value.stack) {
-      serialized.stack = value.stack
-    }
-
-    return serialized
-  }
-
-  if (Array.isArray(value)) {
-    return value.map(item => normalizeForAgent(item, depth - 1, seen))
-  }
-
-  if (typeof value === 'object') {
-    if (seen.has(value as object)) {
-      return '[Circular]'
-    }
-
-    seen.add(value as object)
-
-    return Object.fromEntries(
-      Object.entries(value as Record<string, unknown>).map(([key, item]) => [
-        key,
-        normalizeForAgent(item, depth - 1, seen),
-      ]),
-    )
-  }
-
-  return String(value)
 }

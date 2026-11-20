@@ -3,7 +3,8 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import process from 'node:process'
 import { describe, expect, it, vi } from 'vitest'
-import { ClearerrError, err, formatForAgent } from '../../src/runtime/error'
+import { formatForAgent } from '../../src'
+import { ClearerrError, err } from '../../src/runtime/error'
 import { isValidErrorCode } from '../../src/shared/registry'
 
 describe('clearerrError', () => {

@@ -28,7 +28,7 @@ Status: done
 Acceptance: Redacted keys → "[redacted]"
 
 ## T1.7 — formatForAgent with maxBytes truncation
-Status: todo
+Status: done
 Acceptance: >8KB truncates safely, valid JSON
 
 ## T1.8 — formatForHuman
