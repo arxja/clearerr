@@ -3,9 +3,9 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import process from 'node:process'
 import { describe, expect, it, vi } from 'vitest'
+import { formatForAgent } from '../../src'
 import { ClearerrError, err } from '../../src/runtime/error'
 import { isValidErrorCode } from '../../src/shared/registry'
-import { formatForAgent } from '../../src'
 
 describe('clearerrError', () => {
   it('validates code format and emits valid JSON for agent formatting', () => {
