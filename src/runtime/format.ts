@@ -183,3 +183,148 @@ function byteLength(value: string): number {
   }
   return value.length
 }
+
+export function formatForHuman(e: unknown): string {
+  const envelope = normalizeEnvelope(e, 10, new WeakSet<object>())
+
+  if (isRecord(envelope)) {
+    return formatHumanRecord(envelope, e)
+  }
+
+  if (e instanceof Error) {
+    return formatNativeError(e)
+  }
+
+  return formatObject(envelope)
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+function formatHumanRecord(record: Record<string, unknown>, original: unknown): string {
+  const lines: string[] = []
+
+  appendIdentity(lines, record, original)
+  appendValueLine(lines, 'Message', record.message)
+  appendValueLine(lines, 'Severity', record.severity)
+  appendValueLine(lines, 'Timestamp', record.timestamp)
+  appendLocation(lines, record.location)
+  appendSection(lines, 'Context', record.context, formatObject)
+  appendSection(lines, 'Fix', record.fix, formatObject)
+  appendSection(lines, 'Cause', record.cause, formatObject)
+  appendStack(lines, record, original)
+
+  return lines.length === 0
+    ? formatObject(record)
+    : lines.join('\n')
+}
+
+function appendIdentity(
+  lines: string[],
+  record: Record<string, unknown>,
+  original: unknown,
+): void {
+  if (typeof record.code === 'string') {
+    lines.push(`ClearerrError: ${record.code}`)
+  }
+  else if (original instanceof Error) {
+    lines.push(`${original.name}: ${original.message}`)
+  }
+}
+
+function appendValueLine(
+  lines: string[],
+  label: string,
+  value: unknown,
+): void {
+  if (typeof value === 'string') {
+    lines.push(`${label}: ${value}`)
+  }
+}
+
+function appendLocation(
+  lines: string[],
+  value: unknown,
+): void {
+  if (value !== undefined) {
+    lines.push(`Location: ${formatLocation(value)}`)
+  }
+}
+
+function appendSection(
+  lines: string[],
+  label: string,
+  value: unknown,
+  formatter: (value: unknown) => string,
+): void {
+  if (value !== undefined) {
+    lines.push(`${label}:`)
+    lines.push(formatter(value))
+  }
+}
+
+function appendStack(
+  lines: string[],
+  record: Record<string, unknown>,
+  original: unknown,
+): void {
+  const stack = original instanceof Error && typeof original.stack === 'string'
+    ? original.stack
+    : typeof record.stack === 'string'
+      ? record.stack
+      : undefined
+
+  if (stack !== undefined) {
+    lines.push('Stack:')
+    lines.push(stack)
+  }
+}
+
+function formatNativeError(error: Error): string {
+  return `${error.name}: ${error.message}${error.stack
+    ? `\n${error.stack}`
+    : ''}`
+}
+
+function formatObject(value: unknown): string {
+  if (typeof value === 'string') {
+    return value
+  }
+  try {
+    const json = JSON.stringify(value, null, 2)
+    return json === undefined
+      ? String(value)
+      : json
+  }
+  catch {
+    return String(value)
+  }
+}
+
+function formatLocation(value: unknown): string {
+  if (typeof value !== 'object' || value === null) {
+    return String(value)
+  }
+
+  const location = value as Record<string, unknown>
+  const file = typeof location.file === 'string'
+    ? location.file
+    : 'unknown'
+  const line = typeof location.line === 'number'
+    ? location.line
+    : 0
+  let formatted = `${file}:${line}`
+
+  if (typeof location.column === 'number') {
+    formatted += `:${location.column}`
+  }
+  if (typeof location.function === 'string') {
+    formatted += ` (${location.function})`
+  }
+  if (typeof location.phase === 'string') {
+    formatted += ` [${location.phase}]`
+  }
+
+  return formatted
+}
