@@ -32,7 +32,7 @@ Status: done
 Acceptance: >8KB truncates safely, valid JSON
 
 ## T1.8 — formatForHuman
-Status: todo
+Status: done
 Acceptance: Snapshot
 
 ## T1.9 — installAgentHandler + CLEARERR_FORMAT
