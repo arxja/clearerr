@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "Preserve",
+    "strict": true,
+    "noEmit": true
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["included/generated/**", "outside/**"]
+}

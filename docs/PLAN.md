@@ -2,10 +2,10 @@
 
 Dev-time plan. At release, replace with user-facing docs.
 
-Status: Phase 1 — Runtime core (in progress)
+Status: Phase 2 — Linter (in progress)
 - Envelope spec: docs/envelope.md
 - Phase archive: docs/phases/phase_00.md
-- Current phase: docs/phases/phase_01.md
+- Current phase: docs/phases/phase_02.md
 
 ## Scope (v1)
 
@@ -29,24 +29,30 @@ B — Runtime emission: call installAgentHandler() once at top level → uncaugh
 C — Agent consumption: parse stderr JSON → read code, location, context, fix.hint, fix.retryable → act on retryable → no source re-read.
 D — Enforcement (CI): npx clearerr scan --ci → exit 1 on error severity or coverage < threshold → PR blocked.
 
-## Active phase — 1 Runtime core
+## Active phase — 2 Linter
 
-Goal: Envelope + formatter shipped and tested.
-Gate: Flow B passes (`installAgentHandler` emits one-line JSON to stderr on
-uncaught ClearerrError).
+Goal: 6 rules + registry + coverage score.
+Gate: Precision ≥90% on fixtures + own code.
+
+Scope guardrails: no CLI code, no ts-morph imports from the runtime entry
+(ts-morph is used only by the separate linter entry via src/linter/index.ts),
+no auto-fix.
 
 | ID | Task | Acceptance |
 |---|---|---|
-| T1.1 | Scaffold | **CANCELLED** — covered by ts starter template (tsdown + vitest + eslint + knip + CI) |
-| T1.2 | Port spike + split into src/shared/types.ts + src/runtime/error.ts + src/index.ts; add validateCodeFormat to src/shared/registry.ts | `pnpm run ci` green; constructor defaults test; immutability test; invalid-code throw test; 6+ tests in `<test-root>/runtime/error.test.ts`; old spike file deleted |
-| T1.3 | `err()` factory | **Folded into T1.2** — spike already exposes `err()`; verified by T1.2 tests |
-| T1.4 | `toJSON()` with cause chain (depth ≤10, cycle detection); split into src/runtime/serialize.ts | `pnpm run ci` green; nested-cause test; cycle test (`{name:"CycleDetected"}`); depth>10 test (`{name:"Truncated"}`) |
-| T1.5 | Location auto-capture (skip own frames + node_modules); split into src/runtime/location.ts | `pnpm run ci` green; real-throw test asserts `file`/`line`; node_modules and own-package frames skipped |
-| T1.6 | Context redaction via `CLEARERR_REDACT` env + `.clearerrrc.json` `redact` array; src/runtime/redact.ts + src/shared/config.ts | `pnpm run ci` green; env redaction test; config redaction test; redacted key → `"[redacted]"` |
-| T1.7 | `formatForAgent` with `maxBytes` truncation (default 8192); split into src/runtime/format.ts | `pnpm run ci` green; >8KB payload truncated to valid JSON; context+stack truncated before top-level fields; custom maxBytes honored |
-| T1.8 | `formatForHuman` — **developer-facing** (terminal/logs) per security model; includes code, message, severity, timestamp, context, fix, cause, location, stack | `pnpm run ci` green; snapshot test; field-presence test for every field |
-| T1.9 | `installAgentHandler` + `CLEARERR_FORMAT` env; throws if `process.stderr` unavailable; src/runtime/handler.ts | `pnpm run ci` green; E2E spawn asserts stderr shape; throws in non-Node env; `CLEARERR_FORMAT=json` overrides default |
-| T1.10 | README runtime usage | `pnpm run ci` green; install + basic usage + browser-warning section present; samples runnable |
+| T2.1 | ts-morph loader (src/linter/loader.ts + src/linter/index.ts as public entry); reads tsconfig, respects include/exclude | `pnpm run ci` green; `getSourceFiles()` count matches fixture expectation |
+| T2.2 | MessageSite extractor (src/linter/sites.ts): throws, custom error ctors, process.exit with message | `pnpm run ci` green; each of the 3 site kinds extracted from fixture; tests per kind |
+| T2.3 | Rule engine (src/linter/engine.ts): `type Rule = (site, ctx) => Finding[]`; `src/linter/findings.ts`; rules registry in src/linter/rules/index.ts | `pnpm run ci` green; dummy rule test; engine iterates registry |
+| T2.4 | Rule `no-bare-throw` | `pnpm run ci` green; fires on `throw new Error(...)`; does NOT fire on `throw err({...})`; ignores `*.test.ts` |
+| T2.5 | Rule `require-code` | `pnpm run ci` green; fires on missing `code`; fires on non-literal code; does not fire on valid literal |
+| T2.6 | Rule `require-context` | `pnpm run ci` green; fires on empty/absent `context`; does not fire on non-empty context |
+| T2.7 | Rule `preserve-cause` | `pnpm run ci` green; fires on rethrow without `cause` when an error is in scope; does not fire when `cause` provided |
+| T2.8 | Rule `require-fix-hint` at boundaries | `pnpm run ci` green; fires only on files matching `boundaries` glob; does not fire elsewhere; fires when `fix.hint` absent in boundary file |
+| T2.9a | `docs/registry.md` — spec for clearerr.codes.json format (map: code → metadata; stable-codes consumes it) | Spec file committed; format locked (referenced from T2.9 and T3.7) |
+| T2.9 | Registry loader (src/shared/registry.ts extended) + rule `stable-codes` | `pnpm run ci` green; fires on unknown code literal; accepts known codes; dynamic code produces warning-level finding not error |
+| T2.10 | Coverage score + unscorable count (src/linter/coverage.ts) | `pnpm run ci` green; `{ scored, unscorable, ratio }` returned; 10-site fixture test |
+| T2.11 | Fixture suite: ≥3 good + ≥3 bad per rule in `test/fixtures/rules/` with own tsconfig + an `ignored.test.ts` for the "ignores tests" assertion | `pnpm run ci` green; all 6 rules covered by fixture files |
+| T2.12 | Golden set: 30 labeled messages in `test/golden/messages.jsonl`; `scripts/precision.ts` prints per-rule precision | `pnpm run ci` green; precision table committed in PR body; all 6 rules precision ≥0.90 |
 
-When this phase closes: move this table verbatim to `phases/phase-1.md`,
-clear this slot, mark the roadmap row done, activate Phase 2.
+When this phase closes: move this table to `docs/phases/phase_02.md` as archive,
+clear active slot, activate Phase 3.

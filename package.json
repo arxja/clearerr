@@ -9,6 +9,10 @@
   "keywords": [],
   "exports": {
     ".": "./dist/index.mjs",
+    "./linter": {
+      "types": "./dist/linter/index.d.mts",
+      "import": "./dist/linter/index.mjs"
+    },
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.mts",
@@ -26,6 +30,9 @@
     "test:run": "vitest run",
     "typecheck": "tsc",
     "ci": "pnpm run lint && pnpm run typecheck && pnpm run knip && pnpm run test:pkg"
+  },
+  "dependencies": {
+    "ts-morph": "catalog:prod"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
