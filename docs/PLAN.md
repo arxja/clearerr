@@ -2,10 +2,10 @@
 
 Dev-time plan. At release, replace with user-facing docs.
 
-Status: Phase 1 — Runtime core (in progress)
+Status: Phase 2 — Linter (in progress)
 - Envelope spec: docs/envelope.md
 - Phase archive: docs/phases/phase_00.md
-- Current phase: docs/phases/phase_01.md
+- Current phase: docs/phases/phase_02.md
 
 ## Scope (v1)
 
@@ -34,8 +34,9 @@ D — Enforcement (CI): npx clearerr scan --ci → exit 1 on error severity or c
 Goal: 6 rules + registry + coverage score.
 Gate: Precision ≥90% on fixtures + own code.
 
-Scope guardrails: no CLI code, no ts-morph in runtime deps (separate entry
-via src/linter/index.ts), no auto-fix.
+Scope guardrails: no CLI code, no ts-morph imports from the runtime entry
+(ts-morph is used only by the separate linter entry via src/linter/index.ts),
+no auto-fix.
 
 | ID | Task | Acceptance |
 |---|---|---|
@@ -53,5 +54,5 @@ via src/linter/index.ts), no auto-fix.
 | T2.11 | Fixture suite: ≥3 good + ≥3 bad per rule in `test/fixtures/rules/` with own tsconfig + an `ignored.test.ts` for the "ignores tests" assertion | `pnpm run ci` green; all 6 rules covered by fixture files |
 | T2.12 | Golden set: 30 labeled messages in `test/golden/messages.jsonl`; `scripts/precision.ts` prints per-rule precision | `pnpm run ci` green; precision table committed in PR body; all 6 rules precision ≥0.90 |
 
-When this phase closes: move this table to `phases/phase-2.md` as archive,
+When this phase closes: move this table to `docs/phases/phase_02.md` as archive,
 clear active slot, activate Phase 3.
