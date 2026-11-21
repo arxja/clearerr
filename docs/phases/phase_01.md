@@ -36,9 +36,9 @@ Status: done
 Acceptance: Snapshot
 
 ## T1.9 — installAgentHandler + CLEARERR_FORMAT
-Status: todo
+Status: done
 Acceptance: E2E spawn: stderr shape
 
 ## T1.10 — README: runtime usage
-Status: todo
+Status: done
 Acceptance: Samples run

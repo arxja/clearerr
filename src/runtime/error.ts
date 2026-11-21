@@ -11,8 +11,6 @@ import { captureLocation } from './location'
 import { redactContext, redactContextSafely } from './redact'
 import { serializeClearerrError } from './serialize'
 
-export { formatForAgent, formatForHuman } from './format'
-
 export class ClearerrError extends Error {
   readonly code: string
   readonly context: Record<string, unknown>
@@ -95,11 +93,4 @@ export class ClearerrError extends Error {
 
 export function err(spec: ClearerrErrorSpec, opts?: ErrorFactoryOptions): ClearerrError {
   return new ClearerrError(spec, opts)
-}
-
-export function installAgentHandler(_opts?: {
-  stream?: 'stderr' | 'stdout'
-  format?: 'agent' | 'json' | 'human'
-}): void {
-  // Minimal no-op implementation for T0.2.
 }
