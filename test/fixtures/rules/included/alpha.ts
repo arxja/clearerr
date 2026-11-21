@@ -1,3 +1,5 @@
+import { outside } from '../outside/excluded'
+
 export function alpha(): string {
-  return 'alpha'
+  return outside()
 }

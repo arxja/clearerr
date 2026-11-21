@@ -29,6 +29,8 @@ describe('linter loader', () => {
     const paths = relativeSourcePaths(project.getSourceFiles().map(file => file.getFilePath()))
 
     expect(paths.filter(path => path.startsWith('included/'))).toHaveLength(2)
+    expect(paths).not.toContain('included/generated/ignored.ts')
+    expect(paths).not.toContain('outside/excluded.ts')
   })
 
   it('resolves an explicit tsconfig path from the working directory', () => {
