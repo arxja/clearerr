@@ -95,4 +95,22 @@ describe('installAgentHandler', () => {
       severity: 'fatal',
     })
   }, 15_000)
+
+  it('terminates with status 1 on an uncaught error despite an active handle', () => {
+    const entry = pathToFileURL(join(process.cwd(), 'src/index.ts')).href
+    const script = `import('${entry}').then((m) => { m.installAgentHandler(); setInterval(() => {}, 1000); setImmediate(() => { throw m.err({ code: 'TEST_HANDLER_ACTIVE_HANDLE', message: 'active handle failure' }) }) })`
+    const result = spawnSync(process.execPath, ['--import', 'tsx', '--eval', script], {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      env: { ...process.env, CLEARERR_FORMAT: 'json' },
+      timeout: 5_000,
+    })
+
+    expect(result.status).toBe(1)
+    const lines = result.stderr.trim().split('\n').filter(Boolean)
+    expect(JSON.parse(lines[0]!)).toMatchObject({
+      code: 'TEST_HANDLER_ACTIVE_HANDLE',
+      message: 'active handle failure',
+    })
+  }, 15_000)
 })
