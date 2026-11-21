@@ -12,8 +12,6 @@ allowBuilds:
   simple-git-hooks: false
 
 catalogs:
-  prod:
-    ts-morph: ^28.0.0
   api:
     tsnapi: ^1.6.1
   build:
@@ -37,6 +35,8 @@ catalogs:
     eslint-plugin-sonarjs: ^4.2.2
     knip: ^6.45.1
     publint: ^0.3.25
+  prod:
+    ts-morph: ^28.0.0
   test:
     '@vitest/coverage-v8': ^5.1.0
     tsdown-stale-guard: ^0.1.3
