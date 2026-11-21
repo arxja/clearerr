@@ -41,7 +41,12 @@ installAgentHandler({ format: 'human' })
 Agent formatting and human formatting are runnable with:
 
 ```ts
-import { formatForAgent, formatForHuman } from 'clearerr'
+import { err, formatForAgent, formatForHuman } from 'clearerr'
+
+const error = err({
+  code: 'CONFIG_INVALID_PORT',
+  message: 'Invalid port 99999',
+})
 
 const formatted = formatForAgent(error)
 const developerText = formatForHuman(error)
