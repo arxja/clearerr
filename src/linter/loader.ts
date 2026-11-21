@@ -19,12 +19,13 @@ export function resolveTsconfigPath(options: LoaderOptions = {}): string {
  * Creates a ts-morph project from a tsconfig file.
  *
  * ts-morph applies the tsconfig `include`/`exclude`/`files` globs when it
- * populates the project, so `getSourceFiles()` only returns files selected by
- * the project configuration.
+ * populates the project. Dependency resolution is disabled so imported files
+ * that the tsconfig excludes are not added back to the project.
  */
 export function loadProject(options: LoaderOptions = {}): Project {
   return new Project({
     tsConfigFilePath: resolveTsconfigPath(options),
+    skipFileDependencyResolution: true,
   })
 }
 
