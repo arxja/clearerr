@@ -12,6 +12,8 @@ allowBuilds:
   simple-git-hooks: false
 
 catalogs:
+  prod:
+    ts-morph: ^28.0.0
   api:
     tsnapi: ^1.6.1
   build:
