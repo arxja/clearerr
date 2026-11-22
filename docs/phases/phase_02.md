@@ -8,7 +8,7 @@ Status: done
 Acceptance: getSourceFiles() matches fixture
 
 ## T2.2 — MessageSite extractor: throws, custom error ctors, process.exit w/ message
-Status: todo
+Status: done
 Acceptance: 3 kinds extracted
 
 ## T2.3 — Rule engine: Rule = (site, ctx) => Finding[]
