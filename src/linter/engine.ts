@@ -14,6 +14,11 @@ export interface RuleContext {
   relativeFile: string
   /** True when the file is a test file (`*.test.*` or `*.spec.*`). */
   isTestFile: boolean
+  /**
+   * Globs for files that sit at an application boundary, relative to `root`.
+   * Boundary-specific rules are inert when this is missing or empty.
+   */
+  boundaries?: readonly string[]
 }
 
 /** A rule inspects one message site and returns zero or more findings. */
@@ -24,6 +29,8 @@ export interface RunRulesOptions {
   rules?: readonly Rule[]
   /** Project root used to build relative paths. Defaults to the process cwd. */
   cwd?: string
+  /** Globs for boundary files, relative to `cwd`. */
+  boundaries?: readonly string[]
 }
 
 const TEST_FILE_PATTERN = /\.(?:test|spec)\.[cm]?[jt]sx?$/
@@ -34,13 +41,22 @@ export function isTestFile(file: string): boolean {
 }
 
 /** Builds the context passed to every rule for one site. */
-export function createRuleContext(site: MessageSite, cwd = process.cwd()): RuleContext {
-  return {
+export function createRuleContext(
+  site: MessageSite,
+  cwd = process.cwd(),
+  boundaries?: readonly string[],
+): RuleContext {
+  const ctx: RuleContext = {
     root: cwd,
     file: site.file,
     relativeFile: relative(cwd, site.file).replaceAll('\\', '/'),
     isTestFile: isTestFile(site.file),
   }
+
+  if (boundaries !== undefined)
+    ctx.boundaries = boundaries
+
+  return ctx
 }
 
 function compareFindings(a: Finding, b: Finding): number {
@@ -64,7 +80,7 @@ export function runRules(
   const findings: Finding[] = []
 
   for (const site of sites) {
-    const ctx = createRuleContext(site, cwd)
+    const ctx = createRuleContext(site, cwd, options.boundaries)
 
     for (const rule of rules) {
       findings.push(...rule(site, ctx))
