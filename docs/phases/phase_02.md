@@ -12,27 +12,27 @@ Status: done
 Acceptance: 3 kinds extracted
 
 ## T2.3 — Rule engine: Rule = (site, ctx) => Finding[]
-Status: todo
+Status: done
 Acceptance: Dummy rule test
 
 ## T2.4 — Rule no-bare-throw
-Status: todo
+Status: done
 Acceptance: Fires on throw new Error; ignores tests
 
 ## T2.5 — Rule require-code
-Status: todo
+Status: done
 Acceptance: Fires on missing/dynamic code
 
 ## T2.6 — Rule require-context
-Status: todo
+Status: done
 Acceptance: Fires on empty/absent context
 
 ## T2.7 — Rule preserve-cause
-Status: todo
+Status: done
 Acceptance: Fires on rethrow without cause
 
 ## T2.8 — Rule require-fix-hint at boundaries
-Status: todo
+Status: done
 Acceptance: Only files matching boundaries glob
 
 ## T2.9 — Registry loader + stable-codes rule
