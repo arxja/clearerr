@@ -152,14 +152,60 @@ function readSpecArgument(node: Node | undefined): {
   return { spec, messageNode }
 }
 
+/**
+ * Returns the message argument of an error constructor. `AggregateError`
+ * takes its errors first, so its message is the second argument.
+ */
+function getMessageArgument(node: NewExpression, constructorName: string | undefined): Node | undefined {
+  const index = constructorName === 'AggregateError'
+    ? 1
+    : 0
+
+  return node.getArguments()[index]
+}
+
+function isWrappedExpression(node: Node): boolean {
+  return TsNode.isParenthesizedExpression(node)
+    || TsNode.isAsExpression(node)
+    || TsNode.isNonNullExpression(node)
+    || TsNode.isTypeAssertion(node)
+    || TsNode.isSatisfiesExpression(node)
+}
+
+function getWrappedExpression(node: Node): Node | undefined {
+  if (
+    TsNode.isParenthesizedExpression(node)
+    || TsNode.isAsExpression(node)
+    || TsNode.isNonNullExpression(node)
+    || TsNode.isTypeAssertion(node)
+    || TsNode.isSatisfiesExpression(node)
+  ) {
+    return node.getExpression()
+  }
+
+  return undefined
+}
+
+function unwrapExpression(node: Node): Node {
+  let current = node
+  let inner = getWrappedExpression(current)
+
+  while (inner !== undefined) {
+    current = inner
+    inner = getWrappedExpression(current)
+  }
+
+  return current
+}
+
 function extractThrowSite(statement: ThrowStatement): MessageSite {
-  const thrown = statement.getExpression()
+  const thrown = unwrapExpression(statement.getExpression())
   const details: Omit<MessageSite, 'kind' | 'file' | 'line' | 'column' | 'node'> = {}
 
   if (TsNode.isNewExpression(thrown)) {
     details.constructorName = getCalleeName(thrown.getExpression())
 
-    const specArgument = readSpecArgument(thrown.getArguments()[0])
+    const specArgument = readSpecArgument(getMessageArgument(thrown, details.constructorName))
     details.spec = specArgument.spec
     Object.assign(details, messageFields(specArgument.messageNode))
   }
@@ -179,16 +225,7 @@ function isDirectlyThrown(node: NewExpression): boolean {
   let current: Node = node
   let parent = current.getParent()
 
-  while (
-    parent !== undefined
-    && (
-      TsNode.isParenthesizedExpression(parent)
-      || TsNode.isAsExpression(parent)
-      || TsNode.isNonNullExpression(parent)
-      || TsNode.isTypeAssertion(parent)
-      || TsNode.isSatisfiesExpression(parent)
-    )
-  ) {
+  while (parent !== undefined && isWrappedExpression(parent)) {
     current = parent
     parent = parent.getParent()
   }
@@ -204,7 +241,7 @@ function extractErrorConstructorSite(node: NewExpression): MessageSite | undefin
   if (constructorName === undefined || !isErrorConstructorName(constructorName))
     return undefined
 
-  const specArgument = readSpecArgument(node.getArguments()[0])
+  const specArgument = readSpecArgument(getMessageArgument(node, constructorName))
 
   return createSite(node, 'error-constructor', {
     constructorName,

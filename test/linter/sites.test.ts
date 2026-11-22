@@ -25,6 +25,9 @@ describe('message site extractor', () => {
       'throw-structured',
       'throw-with-cause',
       'throw-custom',
+      'throw-aggregate',
+      'throw-parenthesized',
+      'throw-asserted',
     ])
   })
 
@@ -32,13 +35,14 @@ describe('message site extractor', () => {
     expect(messagesOfKind('error-constructor')).toEqual([
       'constructor-custom',
       'constructor-type',
+      'constructor-aggregate',
     ])
 
     const constructorNames = sites
       .filter(site => site.kind === 'error-constructor')
       .map(site => site.constructorName)
 
-    expect(constructorNames).toEqual(['AppError', 'TypeError'])
+    expect(constructorNames).toEqual(['AppError', 'TypeError', 'AggregateError'])
   })
 
   it('extracts process.exit only when it carries a message', () => {
@@ -50,6 +54,9 @@ describe('message site extractor', () => {
 
     expect(byMessage.get('throw-bare')?.constructorName).toBe('Error')
     expect(byMessage.get('throw-custom')?.constructorName).toBe('AppError')
+    expect(byMessage.get('throw-aggregate')?.constructorName).toBe('AggregateError')
+    expect(byMessage.get('throw-parenthesized')?.constructorName).toBe('Error')
+    expect(byMessage.get('throw-asserted')?.constructorName).toBe('Error')
     expect(byMessage.get('throw-structured')?.constructorName).toBeUndefined()
   })
 
@@ -75,6 +82,9 @@ describe('message site extractor', () => {
     expect(thrownConstructors.map(site => site.messageLiteral)).toEqual([
       'throw-bare',
       'throw-custom',
+      'throw-aggregate',
+      'throw-parenthesized',
+      'throw-asserted',
     ])
   })
 })

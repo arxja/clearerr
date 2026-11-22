@@ -47,3 +47,20 @@ export function exitWithMessage(): never {
 export function exitWithCode(): never {
   process.exit(1)
 }
+
+export function throwAggregate(errors: unknown[]): never {
+  throw new AggregateError(errors, 'throw-aggregate')
+}
+
+export function createAggregate(errors: unknown[]): AggregateError {
+  return new AggregateError(errors, 'constructor-aggregate')
+}
+
+export function throwParenthesized(): never {
+  throw (new Error('throw-parenthesized'))
+}
+
+export function throwAsserted(): never {
+  // eslint-disable-next-line no-throw-literal
+  throw new Error('throw-asserted') as Error
+}
