@@ -1,8 +1,6 @@
-import type { MessageSite } from '../../../src/linter'
-import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { noBareThrow, runRules } from '../../../src/linter'
-import { fixtureDir, fixtureSites, runRule } from './fixtures'
+import { noBareThrow } from '../../../src/linter'
+import { fixtureSites, runRule } from './fixtures'
 
 describe('no-bare-throw rule', () => {
   it('fires on bare error throws', () => {
@@ -24,20 +22,6 @@ describe('no-bare-throw rule', () => {
   })
 
   it('ignores test files', () => {
-    const site: MessageSite = {
-      kind: 'throw',
-      file: join(fixtureDir, 'no-bare-throw.ignored.test.ts'),
-      line: 1,
-      column: 1,
-      node: {} as MessageSite['node'],
-      constructorName: 'Error',
-      message: '\'ignored\'',
-      messageLiteral: 'ignored',
-    }
-
-    expect(runRules([site], {
-      cwd: fixtureDir,
-      rules: [noBareThrow],
-    })).toEqual([])
+    expect(runRule(fixtureSites('ignored.test.ts'), noBareThrow)).toEqual([])
   })
 })
