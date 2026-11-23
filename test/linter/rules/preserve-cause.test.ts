@@ -10,7 +10,7 @@ describe('preserve-cause rule', () => {
   it('fires on rethrows that drop the caught error', () => {
     const findings = runRule(fixtureSites('preserve-cause.bad.ts'), preserveCause)
 
-    expect(findings).toHaveLength(4)
+    expect(findings).toHaveLength(8)
     expect(findings.every(finding => finding.ruleId === 'preserve-cause')).toBe(true)
     expect(findings.every(finding => finding.message.includes('"cause"'))).toBe(true)
     expect(findings.every(finding => finding.message.includes('"error"'))).toBe(true)

@@ -48,3 +48,53 @@ export function emptyOptions(): never {
     )
   }
 }
+
+export function undefinedCause(): never {
+  try {
+    throw new Error('original')
+  }
+  catch (error) {
+    throw err(
+      {
+        code: 'UNDEFINED_CAUSE',
+        message: String(error),
+        context: { error },
+      },
+      { cause: undefined },
+    )
+  }
+}
+
+export function nullCause(): never {
+  try {
+    throw new Error('original')
+  }
+  catch (error) {
+    throw err(
+      {
+        code: 'NULL_CAUSE',
+        message: String(error),
+        context: { error },
+      },
+      { cause: null },
+    )
+  }
+}
+
+export function constructorUndefinedCause(): never {
+  try {
+    throw new Error('original')
+  }
+  catch (error) {
+    throw new Error(String(error), { cause: undefined })
+  }
+}
+
+export function constructorNullCause(): never {
+  try {
+    throw new Error('original')
+  }
+  catch (error) {
+    throw new Error(String(error), { cause: null })
+  }
+}
