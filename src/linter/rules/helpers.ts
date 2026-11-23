@@ -53,6 +53,33 @@ export function getThrownExpression(site: MessageSite): Node | undefined {
   return unwrapExpression(site.node.getExpression())
 }
 
+/** Returns true for values that are statically null or undefined. */
+function isStaticallyAbsent(node: Node): boolean {
+  const value = unwrapExpression(node)
+
+  if (TsNode.isNullLiteral(value))
+    return true
+
+  return TsNode.isIdentifier(value) && value.getText() === 'undefined'
+}
+
+/** Returns true for literal primitives that cannot be a context object. */
+function isLiteralContextValue(node: Node): boolean {
+  return TsNode.isNumericLiteral(node)
+    || TsNode.isBigIntLiteral(node)
+    || TsNode.isStringLiteral(node)
+    || TsNode.isNoSubstitutionTemplateLiteral(node)
+    || TsNode.isTrueLiteral(node)
+    || TsNode.isFalseLiteral(node)
+}
+
+/** Returns true when an object literal carries a cause that is not statically absent. */
+function hasCauseValue(object: ObjectLiteralExpression): boolean {
+  const cause = getPropertyValue(object, 'cause')
+
+  return cause !== undefined && !isStaticallyAbsent(cause)
+}
+
 /** Returns true for a direct `err(...)` call. */
 export function isErrCall(node: Node): node is CallExpression {
   if (!TsNode.isCallExpression(node))
@@ -70,8 +97,16 @@ export function hasCauseOption(site: MessageSite): boolean {
   const thrown = getThrownExpression(site)
 
   if (thrown !== undefined && TsNode.isNewExpression(thrown)) {
-    return thrown.getArguments().slice(1).some(argument =>
-      TsNode.isObjectLiteralExpression(argument) && argument.getProperty('cause') !== undefined)
+    const argumentIndex = site.constructorName === 'AggregateError' ? 2 : 1
+    const options = thrown.getArguments()[argumentIndex]
+
+    if (options === undefined)
+      return false
+
+    if (!TsNode.isObjectLiteralExpression(options))
+      return true
+
+    return hasCauseValue(options)
   }
 
   if (thrown !== undefined && isErrCall(thrown)) {
@@ -83,11 +118,11 @@ export function hasCauseOption(site: MessageSite): boolean {
     if (!TsNode.isObjectLiteralExpression(options))
       return true
 
-    return options.getProperty('cause') !== undefined
+    return hasCauseValue(options)
   }
 
   if (site.options !== undefined)
-    return site.options.getProperty('cause') !== undefined
+    return hasCauseValue(site.options)
 
   return false
 }
@@ -106,10 +141,7 @@ export function hasNonEmptyContext(site: MessageSite): boolean {
   if (TsNode.isObjectLiteralExpression(value))
     return value.getProperties().length > 0
 
-  if (TsNode.isNullLiteral(value))
-    return false
-
-  if (TsNode.isIdentifier(value) && value.getText() === 'undefined')
+  if (isStaticallyAbsent(value) || isLiteralContextValue(value))
     return false
 
   // Dynamic values cannot be inspected; assume the author supplied context.
@@ -127,6 +159,9 @@ export function hasFixHint(site: MessageSite): boolean {
 
   const value = unwrapExpression(fix)
 
+  if (isStaticallyAbsent(value))
+    return false
+
   if (!TsNode.isObjectLiteralExpression(value))
     return true
 
@@ -136,6 +171,9 @@ export function hasFixHint(site: MessageSite): boolean {
     return false
 
   const hintValue = unwrapExpression(hint)
+
+  if (isStaticallyAbsent(hintValue))
+    return false
 
   if (TsNode.isStringLiteral(hintValue) || TsNode.isNoSubstitutionTemplateLiteral(hintValue))
     return hintValue.getLiteralValue().trim().length > 0
