@@ -37,3 +37,27 @@ export function missingConstructorContext(): never {
     message: 'missing constructor context',
   })
 }
+
+export function numericContext(): never {
+  throw err({
+    code: 'NUMERIC_CONTEXT',
+    message: 'numeric context',
+    context: 1,
+  })
+}
+
+export function stringContext(): never {
+  throw err({
+    code: 'STRING_CONTEXT',
+    message: 'string context',
+    context: 'id',
+  })
+}
+
+export function booleanContext(): never {
+  throw err({
+    code: 'BOOLEAN_CONTEXT',
+    message: 'boolean context',
+    context: true,
+  })
+}
