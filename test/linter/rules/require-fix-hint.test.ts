@@ -7,7 +7,9 @@ describe('require-fix-hint rule', () => {
     const findings = runRule(
       fixtureSites('require-fix-hint.boundary.ts'),
       requireFixHint,
-      ['*.boundary.ts'],
+      {
+        boundaries: ['*.boundary.ts'],
+      },
     )
 
     expect(findings).toHaveLength(7)
@@ -19,8 +21,12 @@ describe('require-fix-hint rule', () => {
     const boundarySites = fixtureSites('require-fix-hint.boundary.ts')
     const internalSites = fixtureSites('require-fix-hint.internal.ts')
 
-    expect(runRule(boundarySites, requireFixHint, ['src/**'])).toEqual([])
-    expect(runRule(internalSites, requireFixHint, ['*.boundary.ts'])).toEqual([])
+    expect(runRule(boundarySites, requireFixHint, {
+      boundaries: ['src/**'],
+    })).toEqual([])
+    expect(runRule(internalSites, requireFixHint, {
+      boundaries: ['*.boundary.ts'],
+    })).toEqual([])
   })
 
   it('does nothing when boundaries are not configured', () => {
@@ -31,7 +37,9 @@ describe('require-fix-hint rule', () => {
     const findings = runRule(
       fixtureSites('require-fix-hint.boundary.ts'),
       requireFixHint,
-      ['**/*.boundary.ts'],
+      {
+        boundaries: ['**/*.boundary.ts'],
+      },
     )
 
     expect(findings).toHaveLength(7)
