@@ -3,6 +3,8 @@
 .idea
 .DS_Store
 coverage
+# The linter coverage fixture is source, not a report.
+!test/fixtures/coverage/
 *.log
 *.tgz
 logs

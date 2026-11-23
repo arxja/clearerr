@@ -24,6 +24,7 @@
     "dev": "tsdown --watch",
     "knip": "knip",
     "lint": "eslint --cache",
+    "precision": "tsx scripts/precision.ts",
     "start": "tsx src/index.ts",
     "test": "vitest",
     "test:pkg": "pnpm run build && vitest run",
