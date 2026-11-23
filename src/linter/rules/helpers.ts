@@ -97,9 +97,9 @@ export function hasCauseOption(site: MessageSite): boolean {
   const thrown = getThrownExpression(site)
 
   if (thrown !== undefined && TsNode.isNewExpression(thrown)) {
-    const argumentIndex = site.constructorName === 'AggregateError' 
-    ? 2 
-    : 1
+    const argumentIndex = site.constructorName === 'AggregateError'
+      ? 2
+      : 1
     const options = thrown.getArguments()[argumentIndex]
 
     if (options === undefined)
