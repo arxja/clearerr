@@ -10,7 +10,7 @@ describe('require-fix-hint rule', () => {
       ['*.boundary.ts'],
     )
 
-    expect(findings).toHaveLength(3)
+    expect(findings).toHaveLength(7)
     expect(findings.every(finding => finding.ruleId === 'require-fix-hint')).toBe(true)
     expect(findings.every(finding => finding.message.includes('"fix.hint"'))).toBe(true)
   })
@@ -34,6 +34,6 @@ describe('require-fix-hint rule', () => {
       ['**/*.boundary.ts'],
     )
 
-    expect(findings).toHaveLength(3)
+    expect(findings).toHaveLength(7)
   })
 })

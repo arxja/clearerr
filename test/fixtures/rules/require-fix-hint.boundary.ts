@@ -52,3 +52,39 @@ export function dynamicHint(hint: string): never {
     fix: { hint, retryable: 'no' },
   })
 }
+
+export function nullFix(): never {
+  throw err({
+    code: 'BOUNDARY_NULL_FIX',
+    message: 'null fix',
+    context: { id: 7 },
+    fix: null,
+  })
+}
+
+export function undefinedFix(): never {
+  throw err({
+    code: 'BOUNDARY_UNDEFINED_FIX',
+    message: 'undefined fix',
+    context: { id: 8 },
+    fix: undefined,
+  })
+}
+
+export function nullHint(): never {
+  throw err({
+    code: 'BOUNDARY_NULL_HINT',
+    message: 'null hint',
+    context: { id: 9 },
+    fix: { hint: null, retryable: 'no' },
+  })
+}
+
+export function undefinedHint(): never {
+  throw err({
+    code: 'BOUNDARY_UNDEFINED_HINT',
+    message: 'undefined hint',
+    context: { id: 10 },
+    fix: { hint: undefined, retryable: 'no' },
+  })
+}
