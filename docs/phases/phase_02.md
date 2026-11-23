@@ -36,17 +36,17 @@ Status: done
 Acceptance: Only files matching boundaries glob
 
 ## T2.9 — Registry loader + stable-codes rule
-Status: todo
+Status: done
 Acceptance: Fires on unknown code literal
 
 ## T2.10 — Coverage score + unscorable count
-Status: todo
+Status: done
 Acceptance: 10 fixture sites test
 
 ## T2.11 — Fixture suite: ≥3 good + ≥3 bad per rule
-Status: todo
+Status: done
 Acceptance: pnpm test covers all rules
 
 ## T2.12 — Golden set: 30 labels in test/golden/messages.jsonl; precision script
-Status: todo
+Status: done
 Acceptance: Precision table; all rules ≥0.90
