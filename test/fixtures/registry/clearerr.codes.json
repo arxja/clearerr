@@ -1,0 +1,9 @@
+{
+  "KNOWN_CODE": {},
+  "ASSERTED_KNOWN": {
+    "description": "Known asserted code."
+  },
+  "CONSTRUCTOR_KNOWN": {
+    "severity": "recoverable"
+  }
+}
