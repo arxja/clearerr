@@ -1,3 +1,5 @@
+export * from '../shared/registry'
+export * from './coverage'
 export * from './engine'
 export * from './findings'
 export * from './loader'

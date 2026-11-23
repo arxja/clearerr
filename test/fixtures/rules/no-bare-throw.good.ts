@@ -16,6 +16,15 @@ export function structuredConstructor(): never {
   })
 }
 
+export function structuredAsserted(): never {
+  // eslint-disable-next-line no-throw-literal
+  throw err({
+    code: 'STRUCTURED_ASSERTED',
+    message: 'structured asserted',
+    context: { id: 3 },
+  }) as Error
+}
+
 export function createdButNotThrown(): Error {
   return new Error('not thrown')
 }

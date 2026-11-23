@@ -1,3 +1,4 @@
+import type { CodeRegistry } from '../shared/registry'
 import type { Finding } from './findings'
 import type { MessageSite } from './sites'
 import { relative } from 'node:path'
@@ -19,6 +20,11 @@ export interface RuleContext {
    * Boundary-specific rules are inert when this is missing or empty.
    */
   boundaries?: readonly string[]
+  /**
+   * Known error codes from `clearerr.codes.json`. Rules that validate the
+   * code taxonomy are inert when this is missing.
+   */
+  codeRegistry?: CodeRegistry
 }
 
 /** A rule inspects one message site and returns zero or more findings. */
@@ -31,6 +37,8 @@ export interface RunRulesOptions {
   cwd?: string
   /** Globs for boundary files, relative to `cwd`. */
   boundaries?: readonly string[]
+  /** Known error codes from `clearerr.codes.json`. */
+  codeRegistry?: CodeRegistry
 }
 
 const TEST_FILE_PATTERN = /\.(?:test|spec)\.[cm]?[jt]sx?$/
@@ -45,6 +53,7 @@ export function createRuleContext(
   site: MessageSite,
   cwd = process.cwd(),
   boundaries?: readonly string[],
+  codeRegistry?: CodeRegistry,
 ): RuleContext {
   const ctx: RuleContext = {
     root: cwd,
@@ -55,6 +64,9 @@ export function createRuleContext(
 
   if (boundaries !== undefined)
     ctx.boundaries = boundaries
+
+  if (codeRegistry !== undefined)
+    ctx.codeRegistry = codeRegistry
 
   return ctx
 }
@@ -80,7 +92,7 @@ export function runRules(
   const findings: Finding[] = []
 
   for (const site of sites) {
-    const ctx = createRuleContext(site, cwd, options.boundaries)
+    const ctx = createRuleContext(site, cwd, options.boundaries, options.codeRegistry)
 
     for (const rule of rules) {
       findings.push(...rule(site, ctx))
