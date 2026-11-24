@@ -10,27 +10,33 @@ function readJsonString(
   text: string,
   start: number,
 ): { value: string, next: number } | undefined {
-  let value = ''
   let index = start + 1
 
   while (index < text.length) {
     const char = text[index]
 
     if (char === '\\') {
-      const escaped = text[index + 1]
-
-      if (escaped === undefined)
+      if (index + 1 >= text.length)
         return undefined
 
-      value += escaped
       index += 2
       continue
     }
 
-    if (char === '"')
-      return { value, next: index + 1 }
+    if (char === '"') {
+      try {
+        const value = JSON.parse(text.slice(start, index + 1))
 
-    value += char
+        if (typeof value === 'string')
+          return { value, next: index + 1 }
+      }
+      catch {
+        return undefined
+      }
+
+      return undefined
+    }
+
     index += 1
   }
 

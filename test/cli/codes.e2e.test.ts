@@ -47,6 +47,31 @@ describe('clearerr codes', () => {
     expect(result.stderr).toContain('APP_FAILED')
   }, 60_000)
 
+  it('detects duplicates after decoding escaped keys', () => {
+    const fixture = createRegistryProject(`{
+  "APP\\u005fFAILED": { "severity": "fatal" },
+  "APP_FAILED": { "severity": "warning" }
+}
+`)
+    const result = runCli(['codes'], fixture.dir)
+
+    expect(result.status).toBe(1)
+    expect(result.stderr).toContain('Duplicate error code')
+    expect(result.stderr).toContain('APP_FAILED')
+  }, 60_000)
+
+  it('lists escaped keys by their decoded value', () => {
+    const fixture = createRegistryProject(`{
+  "APP\\u005fOK": {}
+}
+`)
+    const result = runCli(['codes'], fixture.dir)
+
+    expect(result.status).toBe(0)
+    expect(result.stdout).toContain('clearerr codes: 1 code')
+    expect(result.stdout).toContain('APP_OK')
+  }, 60_000)
+
   it('flags codes that do not match the registry format', () => {
     const fixture = createRegistryProject(JSON.stringify({ app_failed: {} }))
     const result = runCli(['codes'], fixture.dir)
