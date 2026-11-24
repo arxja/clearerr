@@ -16,7 +16,11 @@
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.mts",
+  "bin": {
+    "clearerr": "./bin/clearerr.mjs"
+  },
   "files": [
+    "bin",
     "dist"
   ],
   "scripts": {
@@ -33,7 +37,10 @@
     "ci": "pnpm run lint && pnpm run typecheck && pnpm run knip && pnpm run test:pkg"
   },
   "dependencies": {
-    "ts-morph": "catalog:prod"
+    "citty": "catalog:prod",
+    "picocolors": "catalog:prod",
+    "ts-morph": "catalog:prod",
+    "zod": "catalog:prod"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

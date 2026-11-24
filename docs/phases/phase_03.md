@@ -4,35 +4,35 @@ Goal: init, scan, codes, config, exit codes.
 Gate: Flows A and D work end-to-end.
 
 ## T3.1 — Bin (citty + picocolors): scan, init, codes
-Status: todo
+Status: done
 Acceptance: npx clearerr --help works
 
 ## T3.2 — Config loader .clearerrrc.json with zod
-Status: todo
+Status: done
 Acceptance: Invalid config fails clearly
 
 ## T3.3 — Terminal reporter (grouped, colored, coverage footer)
-Status: todo
+Status: done
 Acceptance: Snapshot
 
 ## T3.4 — JSON reporter (--format json)
-Status: todo
+Status: done
 Acceptance: Matches §2 finding shape
 
 ## T3.5 — clearerr init scaffolds config + empty registry
-Status: todo
+Status: done
 Acceptance: Idempotent; --force to overwrite
 
 ## T3.6 — --ci exit 1 on error severity; --fail-on threshold
-Status: todo
+Status: done
 Acceptance: E2E exit codes
 
 ## T3.7 — clearerr codes lists + validates (dupes, format)
-Status: todo
+Status: done
 Acceptance: E2E
 
 ## T3.8 — README: install / adopt / CI / before-after; docs/rubric.md
-Status: todo
+Status: done
 Acceptance: Docs complete
 
 Goal: init, scan, codes, config, exit codes.
