@@ -58,10 +58,12 @@ coverage = scored / (scored + unscorable)
 
 ## Scope
 
-Coverage follows the tsconfig `include` / `exclude` rules. Exclude test files
-and generated code in `tsconfig.json` if they should not count. Test files are
-skipped by most rules but still count as sites when they are part of the
-project.
+Coverage follows the tsconfig `include` / `exclude` rules and the scan target.
+`clearerr scan <path>` counts only sites within that file or directory, so
+included files outside the target are excluded from the denominator. Exclude
+test files and generated code in `tsconfig.json` if they should not count. Test
+files are skipped by most rules but still count as sites when they are part of
+the project.
 
 ## Raising the score
 

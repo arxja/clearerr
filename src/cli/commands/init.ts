@@ -28,6 +28,10 @@ const SCAFFOLD_FILES: readonly ScaffoldFile[] = [
   { name: CODE_REGISTRY_FILENAME, content: CODES_TEMPLATE },
 ]
 
+function isEexistError(error: unknown): boolean {
+  return error instanceof Error && (error as NodeJS.ErrnoException).code === 'EEXIST'
+}
+
 /**
  * Writes the starter config and an empty code registry. Existing files are
  * left untouched unless `force` is set, which makes the command idempotent.
@@ -41,12 +45,24 @@ export function runInitCommand(options: InitCommandOptions = {}): InitCommandRes
     const path = join(cwd, file.name)
     const existed = existsSync(path)
 
-    if (existed && !force) {
-      lines.push(`skip ${file.name} (already exists, use --force to overwrite)`)
-      continue
+    const flag = force ? 'w' : 'wx'
+
+    try {
+      writeFileSync(
+        path,
+        file.content,
+        { flag },
+      )
+    }
+    catch (error) {
+      if (!force && isEexistError(error)) {
+        lines.push(`skip ${file.name} (already exists, use --force to overwrite)`)
+        continue
+      }
+
+      throw error
     }
 
-    writeFileSync(path, file.content)
     lines.push(`${existed ? 'overwrote' : 'created'} ${file.name}`)
   }
 
