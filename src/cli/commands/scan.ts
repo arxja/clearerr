@@ -2,7 +2,7 @@ import type { CliConfig, OutputFormat } from '../config'
 import type { FailOn } from '../exit'
 import type { ScanReport } from '../reporters/types'
 import { existsSync } from 'node:fs'
-import { isAbsolute, relative, resolve } from 'node:path'
+import { isAbsolute, relative, resolve, sep } from 'node:path'
 import process from 'node:process'
 import { defineCommand } from 'citty'
 import { computeCoverage, extractMessageSites, loadCodeRegistry, runRules } from '../../linter'
@@ -26,7 +26,10 @@ function isWithinTarget(target: string, file: string): boolean {
 
   const value = relative(target, file)
 
-  return value.length > 0 && !value.startsWith('..') && !isAbsolute(value)
+  return value.length > 0
+    && value !== '..'
+    && !value.startsWith(`..${sep}`)
+    && !isAbsolute(value)
 }
 
 function resolveTsconfig(cwd: string, tsconfig: string): string {
@@ -50,6 +53,13 @@ export function scanProject(options: ScanProjectOptions = {}): ScanReport {
   const target = options.target === undefined || options.target === '.'
     ? cwd
     : resolve(cwd, options.target)
+
+  if (!existsSync(target)) {
+    throw new TypeError(
+      `Cannot find scan target "${options.target ?? '.'}" (resolved to ${target}).`,
+    )
+  }
+
   const sites = extractMessageSites({ cwd, tsconfigFilePath: tsconfigPath })
     .filter(site => isWithinTarget(target, site.file))
   const findings = runRules(sites, {

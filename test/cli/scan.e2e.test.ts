@@ -103,6 +103,48 @@ describe('clearerr scan', () => {
     expect(result.exitCode).toBe(0)
   }, 60_000)
 
+  it('fails when the scan target does not exist', () => {
+    const fixture = createScanProject()
+    const result = runCli(['scan', 'missing'], fixture.dir)
+
+    expect(result.status).toBe(1)
+    expect(result.stderr).toContain('Cannot find scan target')
+  }, 60_000)
+
+  it('succeeds for an existing empty directory target', () => {
+    const fixture = createScanProject()
+    fixture.write('empty/.keep', '')
+
+    const result = runScanCommand({
+      cwd: fixture.dir,
+      target: 'empty',
+      color: false,
+    })
+
+    expect(result.exitCode).toBe(0)
+    expect(result.report.coverage).toEqual({ scored: 0, unscorable: 0, ratio: 0 })
+    expect(result.output).toContain('Coverage: n/a')
+  }, 60_000)
+
+  it('scans files whose names start with two dots inside the target', () => {
+    project = createCliProject({
+      'src/..legacy.ts': BARE,
+      'tsconfig.json': JSON.stringify({
+        compilerOptions: { module: 'Preserve', target: 'ESNext' },
+        include: ['src/..legacy.ts'],
+      }, null, 2),
+    })
+
+    const result = runScanCommand({
+      cwd: project.dir,
+      target: 'src',
+      color: false,
+    })
+
+    expect(result.report.coverage).toEqual({ scored: 0, unscorable: 1, ratio: 0 })
+    expect(result.report.findings).toHaveLength(1)
+  }, 60_000)
+
   it('loads a valid config and rejects an invalid one with an actionable message', () => {
     const fixture = createScanProject()
     fixture.write('.clearerrrc.json', JSON.stringify({ format: 'json' }))
