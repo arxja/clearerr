@@ -214,9 +214,18 @@ catalogs:
       specifier: ^0.3.25
       version: 0.3.25
   prod:
+    citty:
+      specifier: ^0.2.2
+      version: 0.2.2
+    picocolors:
+      specifier: ^1.1.1
+      version: 1.1.1
     ts-morph:
       specifier: ^28.0.0
       version: 28.0.0
+    zod:
+      specifier: ^4.6.7
+      version: 4.6.7
   test:
     '@vitest/coverage-v8':
       specifier: ^5.1.0
@@ -232,9 +241,18 @@ importers:
 
   .:
     dependencies:
+      citty:
+        specifier: catalog:prod
+        version: 0.2.2
+      picocolors:
+        specifier: catalog:prod
+        version: 1.1.1
       ts-morph:
         specifier: catalog:prod
         version: 28.0.0
+      zod:
+        specifier: catalog:prod
+        version: 4.6.7
     devDependencies:
       '@antfu/eslint-config':
         specifier: catalog:lint
@@ -1692,6 +1710,9 @@ packages:
   ci-info@4.5.0:
     resolution: {integrity: sha512-d1uM8k5UZEyPza1n/MG3ko8nKupKN0KJpFsipgPcgaCCvV+IqIfJ+NzTjetlLM+UcXZx3+cLrNr76+eAO7G1Mw==}
     engines: {node: '>=8'}
+
+  citty@0.2.2:
+    resolution: {integrity: sha512-+6vJA3L98yv+IdfKGZHBNiGW5KHn22e/JwID0Strsz8h4S/csAu/OuICwxrg44k5MRiZHWIo8XXuJgQTriRP4w==}
 
   code-block-writer@13.0.3:
     resolution: {integrity: sha512-Oofo0pq3IKnsFtuHqSF7TqBfr71aeyZDVJ0HpmqB7FBM2qEigL0iPONSCZSO9pE9dZTAxANe5XHG9Uy0YMv8cg==}
@@ -3248,6 +3269,9 @@ packages:
       '@yuku-toolchain/wasm':
         optional: true
 
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
+
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
@@ -4360,6 +4384,8 @@ snapshots:
   character-entities@2.0.2: {}
 
   ci-info@4.5.0: {}
+
+  citty@0.2.2: {}
 
   code-block-writer@13.0.3: {}
 
@@ -6144,5 +6170,7 @@ snapshots:
       '@yuku-toolchain/linux-x64': 0.28.0
       '@yuku-toolchain/win32-arm64': 0.28.0
       '@yuku-toolchain/win32-x64': 0.28.0
+
+  zod@4.6.7: {}
 
   zwitch@2.0.4: {}
