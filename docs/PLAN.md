@@ -2,10 +2,10 @@
 
 Dev-time plan. At release, replace with user-facing docs.
 
-Status: Phase 2 — Linter (in progress)
+Status: Phase 3 — CLI + CI
 - Envelope spec: docs/envelope.md
-- Phase archive: docs/phases/phase_00.md
-- Current phase: docs/phases/phase_02.md
+- Phase archive: docs/phases/phase_02.md
+- Current phase: docs/phases/phase_03.md
 
 ## Scope (v1)
 
@@ -40,19 +40,13 @@ no auto-fix.
 
 | ID | Task | Acceptance |
 |---|---|---|
-| T2.1 | ts-morph loader (src/linter/loader.ts + src/linter/index.ts as public entry); reads tsconfig, respects include/exclude | `pnpm run ci` green; `getSourceFiles()` count matches fixture expectation |
-| T2.2 | MessageSite extractor (src/linter/sites.ts): throws, custom error ctors, process.exit with message | `pnpm run ci` green; each of the 3 site kinds extracted from fixture; tests per kind |
-| T2.3 | Rule engine (src/linter/engine.ts): `type Rule = (site, ctx) => Finding[]`; `src/linter/findings.ts`; rules registry in src/linter/rules/index.ts | `pnpm run ci` green; dummy rule test; engine iterates registry |
-| T2.4 | Rule `no-bare-throw` | `pnpm run ci` green; fires on `throw new Error(...)`; does NOT fire on `throw err({...})`; ignores `*.test.ts` |
-| T2.5 | Rule `require-code` | `pnpm run ci` green; fires on missing `code`; fires on non-literal code; does not fire on valid literal |
-| T2.6 | Rule `require-context` | `pnpm run ci` green; fires on empty/absent `context`; does not fire on non-empty context |
-| T2.7 | Rule `preserve-cause` | `pnpm run ci` green; fires on rethrow without `cause` when an error is in scope; does not fire when `cause` provided |
-| T2.8 | Rule `require-fix-hint` at boundaries | `pnpm run ci` green; fires only on files matching `boundaries` glob; does not fire elsewhere; fires when `fix.hint` absent in boundary file |
-| T2.9a | `docs/registry.md` — spec for clearerr.codes.json format (map: code → metadata; stable-codes consumes it) | Spec file committed; format locked (referenced from T2.9 and T3.7) |
-| T2.9 | Registry loader (src/shared/registry.ts extended) + rule `stable-codes` | `pnpm run ci` green; fires on unknown code literal; accepts known codes; dynamic code produces warning-level finding not error |
-| T2.10 | Coverage score + unscorable count (src/linter/coverage.ts) | `pnpm run ci` green; `{ scored, unscorable, ratio }` returned; 10-site fixture test |
-| T2.11 | Fixture suite: ≥3 good + ≥3 bad per rule in `test/fixtures/rules/` with own tsconfig + an `ignored.test.ts` for the "ignores tests" assertion | `pnpm run ci` green; all 6 rules covered by fixture files |
-| T2.12 | Golden set: 30 labeled messages in `test/golden/messages.jsonl`; `scripts/precision.ts` prints per-rule precision | `pnpm run ci` green; precision table committed in PR body; all 6 rules precision ≥0.90 |
+| T3.1 | Bin (citty + picocolors): commands `scan`, `init`, `codes`; `bin/clearerr.mjs` shim | `pnpm run ci` green; `npx clearerr --help` works; each subcommand dispatchable |
+| T3.2 | Config loader `.clearerrrc.json` with zod (src/cli/config.ts); exports parseFull for CLI | `pnpm run ci` green; valid config loads; invalid config fails with actionable message |
+| T3.3 | Terminal reporter (src/cli/reporters/terminal.ts): grouped by file, colored severity, coverage footer | `pnpm run ci` green; snapshot test |
+| T3.4 | JSON reporter (src/cli/reporters/json.ts) via `--format json` | `pnpm run ci` green; output matches §2 finding shape; pipeable (single JSON object) |
+| T3.5 | `clearerr init` scaffolds `.clearerrrc.json` + empty `clearerr.codes.json` from `src/cli/templates/` | `pnpm run ci` green; idempotent (re-run does nothing); `--force` overwrites |
+| T3.6 | `--ci` exit 1 on error severity; `--fail-on <severity>` threshold (src/cli/exit.ts) | `pnpm run ci` green; E2E asserts exit codes 0/1 per config |
+| T3.7 | `clearerr codes` lists + validates (dupes, format) using `docs/registry.md` spec | `pnpm run ci` green; E2E: dupes detected with message; invalid format flagged; valid codes listed |
+| T3.8 | README: install / adopt / CI / before-after sections; `docs/rubric.md` defines what counts as "covered" | `pnpm run ci` green; all four README sections present; rubric defines scoring |
 
-When this phase closes: move this table to `docs/phases/phase_02.md` as archive,
-clear active slot, activate Phase 3.
+When this phase closes: move to `phases/phase-3.md` archive, activate Phase 4.
