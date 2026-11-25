@@ -4,7 +4,7 @@
 
 Your agent can't fix what it can't parse. `clearerr` replaces ad-hoc
 `throw new Error()` with a typed envelope carrying the error code, source
-location, structured context, fix hint, and cause chain — then enforces it at
+location, structured context, fix hint, and cause chain, then enforces it at
 lint time and emits one-line JSON to stderr for agent consumption.
 
 Validated in a paired study (5 real failures, temp 0, mid-tier model):
