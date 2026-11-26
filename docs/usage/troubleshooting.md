@@ -43,8 +43,15 @@ and `pnpm pack`. The committed file should be LF. Add a `.gitattributes` such as
 *.mjs text eol=lf
 ```
 
-then re-checkout the file (or run `git add --renormalize .`). Do not publish a
-tarball built from a CRLF working copy.
+then re-checkout the file so the working tree uses LF:
+
+```sh
+git add --renormalize .
+git checkout -- bin/clearerr.mjs
+```
+
+`git add --renormalize .` updates only the index, so check the file out again
+before packing. Do not publish a tarball built from a CRLF working copy.
 
 ## Scan is slow the first time
 
