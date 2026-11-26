@@ -18,6 +18,35 @@ describe('project documentation', () => {
       expect(readme).toContain(heading)
   })
 
+  it('links every usage guide page from the README and start-here', () => {
+    const readme = readFileSync(join(root, 'README.md'), 'utf8')
+    const usageDir = join(root, 'docs', 'usage')
+    const startHere = readFileSync(join(usageDir, 'start-here.md'), 'utf8')
+
+    expect(readme).toContain('docs/usage/start-here.md')
+    expect(startHere).toContain('# Clearerr usage guide')
+    expect(startHere).toContain('## The five-minute path')
+
+    for (const page of [
+      'getting-started.md',
+      'errors.md',
+      'codes.md',
+      'configuration.md',
+      'scanning.md',
+      'ci.md',
+      'runtime.md',
+      'security.md',
+      'for-agents.md',
+      'migration.md',
+      'api.md',
+      'troubleshooting.md',
+      'limits.md',
+    ]) {
+      expect(startHere).toContain(`(${page})`)
+      expect(readFileSync(join(usageDir, page), 'utf8').length).toBeGreaterThan(0)
+    }
+  })
+
   it('defines the coverage score in docs/rubric.md', () => {
     const rubric = readFileSync(join(root, 'docs', 'rubric.md'), 'utf8')
 

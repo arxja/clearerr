@@ -5,7 +5,7 @@ import { beforeAll, describe } from 'vitest'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 
-describe.skip('api snapshot', () => {
+describe('api snapshot', () => {
   beforeAll(async () => {
     await guardStaleBuild({ root })
   })

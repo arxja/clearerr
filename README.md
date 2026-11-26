@@ -1,9 +1,22 @@
-# Clearerr
+# clearerr
 
-Clearerr is a library that standardizes runtime failure information into a compact, AI-consumable envelope so an agent can diagnose and retry without guessing from raw stack traces.
+**Structured error envelopes for AI coding agents.**
+
+Your agent can't fix what it can't parse. `clearerr` replaces ad-hoc
+`throw new Error()` with a typed envelope carrying the error code, source
+location, structured context, fix hint, and cause chain, then enforces it at
+lint time and emits one-line JSON to stderr for agent consumption.
+
+Validated in a paired study (5 real failures, temp 0, mid-tier model):
+**+40pp one-shot diagnosis success · −36% total tokens · −50% tool calls**
+vs raw stack traces.
+
+For the complete walkthrough - install, first envelope, registry, scanning,
+coverage, CI, runtime handler, agent consumption, and migration - start at
+[docs/usage/start-here.md](docs/usage/start-here.md).
 
 >[!WARNING]
->This project is under **development** and not suitable for any usage
+>This project is under **development** and not suitable for any usage 
 >**Status**: Development 
 
 ## Install
