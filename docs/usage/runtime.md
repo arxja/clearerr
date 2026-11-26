@@ -56,9 +56,13 @@ console.error(formatForHuman(error))
 
 `formatForAgent` defaults: `maxDepth: 5`, `maxBytes: 8192`. When the envelope
 exceeds the byte budget it drops `context`, `cause`, and stacks first, then
-shortens user-controlled text, then falls back to a minimal envelope that keeps
-`schemaVersion`, `code`, `message`, `severity`, `timestamp`, `location`, and
-`context`. `formatForHuman` is developer-facing, not user-facing.
+shortens user-controlled text, then falls back to a minimal envelope. That
+fallback may replace `location` with `{ "file": "unknown", "line": 0 }` and
+`context` with `{}`. If even the minimal envelope exceeds `maxBytes` (or
+`maxBytes` is `0`), `formatForAgent` returns `{}`, which has neither
+`schemaVersion` nor `code`. Consumers must handle output that lacks these fields
+instead of assuming they are present. `formatForHuman` is developer-facing, not
+user-facing.
 
 ## Unhandled rejections
 
