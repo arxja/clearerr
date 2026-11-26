@@ -16,8 +16,9 @@ Context may contain secrets. Configure exact key names to replace with
 CLEARERR_REDACT=password,token,authorization pnpm start
 ```
 
+In `.clearerrrc.json`:
+
 ```json
-// .clearerrrc.json
 { "redact": ["password", "token", "authorization"] }
 ```
 
@@ -85,4 +86,4 @@ The full security model is in [docs/envelope.md](../envelope.md).
 
 ---
 
-Previous: [Runtime handler](runtime.md) | Next: [Consuming envelopes](agents.md)
+Previous: [Runtime handler](runtime.md) | Next: [Consuming envelopes](for-agents.md)
