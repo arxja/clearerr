@@ -21,7 +21,9 @@ Back to [start here](start-here.md). Related: [Troubleshooting](troubleshooting.
 - The runtime checks code **format**, not registry membership.
 - Coverage measures structure, not message quality.
 - Rules are syntactic; dynamic values are assumed to be valid where they cannot
-  be inspected.
+  be inspected. `stable-codes` still reports a warning for a dynamic `code` when
+  a registry is configured, so scans configured to fail on warnings can fail as
+  a result.
 - `preserve-cause` only recognizes `err(...)`, `new ...Error(...)`, and direct
   rethrows inside a lexical `catch`.
 - No ratchet automation; use `coverageThreshold` manually.
