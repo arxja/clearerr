@@ -8,7 +8,7 @@ Back to [start here](start-here.md). Related: [Errors and the envelope](errors.m
 
 ## Parse the envelope
 
-1. Find the last JSON line on stderr (or read the CLI's stdout JSON for scans).
+1. Find the last JSON line on stderr.
 2. Parse it as `ClearerrErrorJSON`.
 3. Use `code`, `message`, `location`, `context`, and `fix.hint` to act.
 4. Use `fix.retryable` to decide whether to retry.
@@ -43,6 +43,13 @@ function parseEnvelope(stderr: string): Envelope | undefined {
   return undefined
 }
 ```
+
+## Scan reports
+
+`clearerr scan --format json` writes a different object to stdout. It is not an
+envelope: read `findings` for rule violations and `coverage` for the
+structured-error score. See
+[Scanning and coverage](scanning.md#json-output).
 
 ## Retry policy
 
