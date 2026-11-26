@@ -1,7 +1,8 @@
 # CI enforcement
 
-Use `clearerr scan` as a pull-request gate: fail on new findings and, once the
-baseline is healthy, fail when coverage drops.
+Use `clearerr scan --ci` as a pull-request gate: it fails on all findings at or
+above the configured `failOn` severity, including findings that already exist in
+the branch. Once the baseline is healthy, also fail when coverage drops.
 
 Back to [start here](start-here.md). Related: [Scanning and coverage](scanning.md),
 [Configuration](configuration.md).
@@ -46,11 +47,15 @@ Notes:
 
 ## Recommended rollout
 
-1. Start with `clearerr scan` and record the baseline coverage.
+1. Start with `clearerr scan` and record the baseline coverage and findings.
 2. Convert code. Do not set a threshold you cannot meet yet.
-3. Set `coverageThreshold` slightly below current coverage, then ratchet it up.
-4. Add `--ci` to the pipeline.
-5. Add `failOn: "warning"` only after the warning surface is clean.
+3. Before enabling the finding gate, resolve existing findings at the target
+   severity, or set `failOn` to a level that matches the current state (for
+   example `"none"` while you clean up). The gate has no baseline: it evaluates
+   every finding in the scan, not only new ones.
+4. Set `coverageThreshold` slightly below current coverage, then ratchet it up.
+5. Add `--ci` to the pipeline.
+6. Add `failOn: "warning"` only after the warning surface is clean.
 
 ## Why not fail on every run immediately?
 
