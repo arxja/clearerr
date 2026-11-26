@@ -50,26 +50,23 @@ pnpm build
 node path/to/clearerr/bin/clearerr.mjs scan ./src
 ```
 
-To use it from another local project, add the checkout as a workspace package:
+To use it from another local project, build a tarball from the checkout and
+install that:
 
-```yaml
-# pnpm-workspace.yaml in your project
-packages:
-  - .
-  - ../clearerr
+```sh
+pnpm install
+pnpm build
+pnpm pack
 ```
 
-```json
-// your package.json
-{
-  "dependencies": {
-    "clearerr": "workspace:*"
-  }
-}
+```sh
+# in your project
+pnpm add /path/to/clearerr-<version>.tgz
 ```
 
-Then `pnpm install` and `pnpm exec clearerr --help`. `pnpm pack` and
-`npm publish` from the Clearerr checkout require LF line endings on
+Then run `pnpm exec clearerr --help`. `pnpm pack` resolves Clearerr's `catalog:`
+dependencies to concrete versions, so the consuming project does not need to
+copy the catalog definitions. Packing requires LF line endings on
 `bin/clearerr.mjs` (see [Troubleshooting](troubleshooting.md)).
 
 ## Five-minute quick start
