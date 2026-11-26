@@ -29,8 +29,13 @@ Back to [start here](start-here.md). Related: [Error codes](codes.md),
 | `failOn` | `"error"` | `scan --ci` | `error`, `warning`, or `none`. |
 | `coverageThreshold` | unset | `scan --ci` / `--coverage` | Ratio from `0` to `1`. |
 
-The config schema is strict: unknown keys and wrong types fail with a message
-that includes the JSON path. Missing fields take their defaults.
+The CLI validates the file strictly: unknown keys and wrong types fail with a
+message that includes the JSON path. Missing fields take their defaults.
+
+The runtime is more permissive. It reads only `redact` and ignores unknown keys,
+so a misspelled `redact` key leaves runtime redaction empty without an error.
+Validate the file with the CLI (for example, `clearerr scan`) before relying on
+redaction.
 
 ## Boundaries
 
