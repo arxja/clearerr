@@ -5,5 +5,10 @@ export default antfu({
   type: 'lib',
   pnpm: true,
   antislop: true,
-  ignores: ['docs/*', 'AGENTS.md', '.github/ISSUE_TEMPLATE/*'],
+  ignores: [
+    'docs/*',
+    'AGENTS.md',
+    '.github/ISSUE_TEMPLATE/*',
+    'playground/*',
+  ],
 })

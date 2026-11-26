@@ -1,0 +1,23 @@
+{
+  "name": "clearerr-playground",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:parent": "pnpm -C .. run build",
+    "scan": "pnpm run build:parent && pnpm exec clearerr scan src",
+    "scan:ci": "pnpm run build:parent && pnpm exec clearerr scan src --ci",
+    "scan:json": "pnpm run build:parent && pnpm exec clearerr scan src --format json",
+    "codes": "pnpm run build:parent && pnpm exec clearerr codes",
+    "run": "tsx cli/run.ts",
+    "run:json": "CLEARERR_FORMAT=json tsx cli/run.ts",
+    "run:human": "CLEARERR_FORMAT=human tsx cli/run.ts"
+  },
+  "dependencies": {
+    "clearerr": "link:.."
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "@types/node": "^22.0.0"
+  }
+}
