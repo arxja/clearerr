@@ -8,7 +8,9 @@ assignees: ""
 
 ## Before you start
 
-- Search existing issues and read [PLAN.md](../docs/PLAN.md) for the v1 scope.
+- Search existing issues and read
+  [PLAN.md](https://github.com/arxja/clearerr/blob/main/docs/PLAN.md) for the v1
+  scope.
 - Clearerr is in Phase 4 (dogfood). New features are expected to come from real
   adoption friction, not speculation. If you have dogfood evidence, include it.
 - Changes to the envelope wire shape require updating `docs/envelope.md` and

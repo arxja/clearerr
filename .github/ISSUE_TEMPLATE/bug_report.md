@@ -10,7 +10,7 @@ assignees: ""
 
 - Search existing issues to avoid duplicates.
 - This template is for public bugs. Do **not** report security issues here; see
-  [the security guidance](../docs/usage/security.md).
+  [the security guidance](https://github.com/arxja/clearerr/blob/main/docs/usage/security.md).
 - Clearerr is pre-v1. Include the exact version or commit you tested.
 
 ## What happened?
