@@ -1,0 +1,4 @@
+{
+  "boundaries": ["src/http.ts", "src/config.ts"],
+  "redact": ["password", "token", "apiKey"]
+}

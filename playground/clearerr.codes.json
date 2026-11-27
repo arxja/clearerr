@@ -1,0 +1,10 @@
+{
+  "CONFIG_INVALID_PORT":     { "description": "PORT env var outside 1-65535" },
+  "CONFIG_MISSING_ENV":      { "description": "Required env var not set" },
+  "DB_POOL_TIMEOUT":         { "description": "DB connection pool exhausted" },
+  "DB_CONNECTION_REFUSED":   { "description": "DB rejected connection" },
+  "HTTP_RATE_LIMITED":       { "description": "Upstream API returned 429" },
+  "HTTP_AUTH_EXPIRED":       { "description": "Upstream rejected token" },
+  "FILE_NOT_FOUND":          { "description": "Required file missing on disk" },
+  "RETRY_EXHAUSTED":         { "description": "All retry attempts failed" }
+}
