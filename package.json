@@ -21,6 +21,7 @@
     "envelope",
     "ai"
   ],
+  "sideEffects": false,
   "exports": {
     ".": "./dist/index.mjs",
     "./linter": {
