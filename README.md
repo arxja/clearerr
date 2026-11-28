@@ -13,7 +13,7 @@ vs raw stack traces.
 
 For the complete walkthrough - install, first envelope, registry, scanning,
 coverage, CI, runtime handler, agent consumption, and migration - start at
-[docs/usage/start-here.md](docs/usage/start-here.md).
+[docs/usage/start-here.md](https://github.com/arxja/clearerr/blob/main/docs/usage/start-here.md).
 
 >[!WARNING]
 >This project is under **development**. </br>
@@ -136,7 +136,7 @@ npx clearerr scan --ci
 - `boundaries` lists files where errors need a `fix.hint`.
 - `failOn` is the severity threshold used by `--ci`.
 - `coverageThreshold` fails CI when structured-error coverage drops below the
-  ratio. See [docs/rubric.md](docs/rubric.md) for exactly what counts as
+  ratio. See [docs/rubric.md](https://github.com/arxja/clearerr/blob/main/docs/rubric.md) for exactly what counts as
   covered.
 
 ## Before / after
