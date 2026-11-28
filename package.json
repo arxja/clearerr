@@ -1,12 +1,26 @@
 {
   "name": "clearerr",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "packageManager": "pnpm@12.18.0",
-  "description": "_description_",
+  "description": "Structured errors for AI agents. Lint-enforced envelopes, one-line JSON on stderr.",
   "author": "Arash Jafari",
   "license": "MIT",
-  "keywords": [],
+  "homepage": "https://github.com/arxja/clearerr#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arxja/clearerr.git"
+  },
+  "bugs": "https://github.com/arxja/clearerr/issues",
+  "keywords": [
+    "agent",
+    "error",
+    "structured",
+    "lint",
+    "json",
+    "envelope",
+    "ai"
+  ],
   "exports": {
     ".": "./dist/index.mjs",
     "./linter": {
@@ -29,6 +43,7 @@
     "knip": "knip",
     "lint": "eslint --cache",
     "precision": "tsx scripts/precision.ts",
+    "release": "bumpp",
     "start": "tsx src/index.ts",
     "test": "vitest",
     "test:pkg": "pnpm run build && vitest run",
@@ -47,6 +62,7 @@
     "@types/bun": "catalog:core",
     "@types/node": "catalog:core",
     "@vitest/coverage-v8": "catalog:test",
+    "bumpp": "catalog:git",
     "eslint": "catalog:lint",
     "eslint-plugin-slop": "catalog:lint",
     "eslint-plugin-sonarjs": "catalog:lint",
